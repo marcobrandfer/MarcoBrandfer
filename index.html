@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marco Brandfer App - Exclusivo</title>
+  <title>Marco Brandfer - Official Web App</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- React & ReactDOM -->
@@ -25,13 +25,34 @@
       const [isPlaying, setIsPlaying] = useState(false);
       const [isRegistered, setIsRegistered] = useState(false);
       const [email, setEmail] = useState('');
+      const [comments, setComments] = useState([]);
+      const [newComment, setNewComment] = useState('');
+      const [userName, setUserName] = useState('');
+      const [activeFansCount, setActiveFansCount] = useState(0);
+      const [copiedPix, setCopiedPix] = useState(false);
+
       const audioRef = useRef(null);
+
+      // Chave Pix de exemplo (Substitua pela sua chave Pix real)
+      const pixKey = "brandfer@hotmail.com"; 
+
+      // Links das Redes Oficiais
+      const socialLinks = {
+        instagram: "https://www.instagram.com/markobrandfer",
+        youtube: "https://www.youtube.com/@Brandfer",
+        kofi: "https://ko-fi.com/marcobrandfer"
+      };
 
       useEffect(() => {
         if (window.lucide) {
           window.lucide.createIcons();
         }
-      }, [isPlaying, isRegistered]);
+        
+        const savedComments = JSON.parse(localStorage.getItem('mb_comments') || '[]');
+        const savedEmails = JSON.parse(localStorage.getItem('mb_vip_emails') || '[]');
+        setComments(savedComments);
+        setActiveFansCount(savedEmails.length);
+      }, [isPlaying, isRegistered, comments, copiedPix]);
 
       const togglePlay = () => {
         if (audioRef.current) {
@@ -47,139 +68,266 @@
       const handleRegister = (e) => {
         e.preventDefault();
         if (email) {
+          const savedEmails = JSON.parse(localStorage.getItem('mb_vip_emails') || '[]');
+          if (!savedEmails.includes(email)) {
+            savedEmails.push(email);
+            localStorage.setItem('mb_vip_emails', JSON.stringify(savedEmails));
+            setActiveFansCount(savedEmails.length);
+          }
           setIsRegistered(true);
         }
       };
 
-      const merchProducts = [
-        { id: 1, name: 'Camiseta Oficial MB Rock/Metal', price: 'R$ 89,90', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500' },
-        { id: 2, name: 'Caneca Colecionável Exclusiva', price: 'R$ 45,00', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500' },
-        { id: 3, name: 'EP Físico / Edição de Colecionador', price: 'R$ 59,90', image: 'https://images.unsplash.com/photo-1539375665275-f9de415ef9ac?w=500' },
-      ];
+      const handleAddComment = (e) => {
+        e.preventDefault();
+        if (newComment.trim() && userName.trim()) {
+          const updated = [{ name: userName, text: newComment, date: new Date().toLocaleDateString() }, ...comments];
+          setComments(updated);
+          localStorage.setItem('mb_comments', JSON.stringify(updated));
+          setNewComment('');
+          setUserName('');
+        }
+      };
+
+      const copyPixToClipboard = () => {
+        navigator.clipboard.writeText(pixKey);
+        setCopiedPix(true);
+        setTimeout(() => setCopiedPix(false), 3000);
+      };
 
       return (
         <div class="min-h-screen">
           
-          {/* Elemento do Áudio Exclusivo (Caminho para audios/guardian.mp3) */}
+          {/* Audio Player Component */}
           <audio ref={audioRef} src="./audios/guardian.mp3" onEnded={() => setIsPlaying(false)}></audio>
 
-          {/* Header Fixo App */}
-          <header class="sticky top-0 z-50 bg-neutral-900/80 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
+          {/* Sticky Header */}
+          <header class="sticky top-0 z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
               <i data-lucide="disc" class="w-6 h-6 text-red-600 animate-spin"></i>
               <span class="font-extrabold tracking-wider text-lg uppercase bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
                 Marco Brandfer <span class="text-red-600 text-xs px-2 py-0.5 border border-red-600 rounded-full">APP</span>
               </span>
             </div>
-            <a href="#vip" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-bold transition">
-              Área VIP
-            </a>
+            
+            {/* Social Buttons Navigation */}
+            <div class="flex items-center gap-3">
+              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-white transition">
+                <i data-lucide="instagram" class="w-5 h-5"></i>
+              </a>
+              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-red-500 transition">
+                <i data-lucide="youtube" class="w-5 h-5"></i>
+              </a>
+              <a href="#support" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-bold transition ml-2">
+                Support
+              </a>
+            </div>
           </header>
 
           {/* Hero Section */}
           <section class="relative bg-neutral-900 border-b border-neutral-800 py-16 px-4 text-center overflow-hidden">
             <div class="relative z-20 max-w-2xl mx-auto space-y-4">
               <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-red-500 font-semibold px-3 py-1 bg-red-950/50 border border-red-800 rounded-full">
-                🔥 Single Exclusivo
+                🔥 Exclusive Release
               </span>
               <h1 class="text-3xl md:text-5xl font-black uppercase tracking-tight text-white">
                 The Guardian of the Hidden Wisdom
               </h1>
               <p class="text-neutral-400 text-sm md:text-base max-w-md mx-auto">
-                Ouça a faixa exclusiva do Marco Brandfer disponível em primeira mão apenas no Web App.
+                Listen to the brand-new exclusive track by Marco Brandfer, available first on this Web App.
               </p>
               
-              {/* Player Nativo */}
+              {/* Audio Controls */}
               <div class="pt-4 flex justify-center">
                 <button 
                   onClick={togglePlay}
                   class="flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3.5 rounded-full transition shadow-lg shadow-red-900/30"
                 >
                   <i data-lucide={isPlaying ? "pause" : "play"} class="w-5 h-5 fill-white"></i>
-                  <span>{isPlaying ? 'Pausar Músia' : 'Ouvir "The Guardian of the Hidden Wisdom"'}</span>
+                  <span>{isPlaying ? 'Pause Track' : 'Listen to "The Guardian of the Hidden Wisdom"'}</span>
                 </button>
               </div>
             </div>
           </section>
 
-          {/* Área VIP / Cadastro para Download */}
+          {/* VIP Access & Email Lead Capture */}
           <section id="vip" class="max-w-3xl mx-auto my-12 px-4">
             <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
-              <div class="flex items-center gap-3 mb-4">
-                <i data-lucide="music" class="text-red-500 w-6 h-6"></i>
-                <h2 class="text-xl md:text-2xl font-bold">Área de Membros VIP</h2>
+              <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="music" class="text-red-500 w-6 h-6"></i>
+                  <h2 class="text-xl md:text-2xl font-bold">VIP Fan Area & Downloads</h2>
+                </div>
+                <span class="text-xs bg-neutral-800 text-neutral-300 border border-neutral-700 px-3 py-1 rounded-full font-mono">
+                  🔥 {activeFansCount} Active Fans
+                </span>
               </div>
 
               {!isRegistered ? (
                 <div class="space-y-4">
                   <p class="text-neutral-400 text-sm">
-                    Cadastre seu e-mail para ter acesso VIP e liberar o download do pacote exclusivo de <strong>The Guardian of the Hidden Wisdom</strong> (.ZIP).
+                    Enter your email to join the VIP list and unlock the instant download of <strong>The Guardian of the Hidden Wisdom</strong> (.ZIP).
                   </p>
                   <form onSubmit={handleRegister} class="flex flex-col sm:flex-row gap-3 pt-2">
                     <input 
                       type="email" 
                       required
-                      placeholder="Digite seu e-mail de fã" 
+                      placeholder="Enter your best email" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       class="bg-neutral-950 border border-neutral-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-red-600 flex-1 text-sm"
                     />
                     <button type="submit" class="bg-red-600 hover:bg-red-700 font-bold px-6 py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                      <span>Desbloquear Download</span>
+                      <span>Unlock Download</span>
                     </button>
                   </form>
                 </div>
               ) : (
                 <div class="bg-neutral-950/80 border border-green-500/30 p-4 rounded-xl space-y-3">
                   <div class="flex items-center gap-2 text-green-400 font-bold text-sm">
-                    <i data-lucide="user-check" class="w-5 h-5"></i> Acesso Liberado!
+                    <i data-lucide="user-check" class="w-5 h-5"></i> VIP Access Granted!
                   </div>
                   <p class="text-xs text-neutral-400">
-                    Seu download está pronto. Clique abaixo para baixar o pacote do single em alta qualidade.
+                    Your exclusive download package is ready. Click the button below to get your high-quality files.
                   </p>
-                  {/* Link direto para downloads/guardian.zip */}
                   <a 
                     href="./downloads/guardian.zip" 
                     download="The_Guardian_of_the_Hidden_Wisdom.zip"
                     class="inline-flex items-center gap-2 bg-neutral-100 hover:bg-white text-black font-bold text-xs px-4 py-2.5 rounded-lg transition"
                   >
-                    <i data-lucide="download" class="w-4 h-4"></i> Baixar Single Completo (.ZIP)
+                    <i data-lucide="download" class="w-4 h-4"></i> Download Full Single (.ZIP)
                   </a>
                 </div>
               )}
             </div>
           </section>
 
-          {/* Loja de Colecionáveis */}
-          <section class="max-w-4xl mx-auto my-12 px-4">
-            <div class="flex items-center gap-3 mb-6">
-              <i data-lucide="shopping-bag" class="text-red-500 w-6 h-6"></i>
-              <h2 class="text-xl md:text-2xl font-bold">Loja do Fã & Colecionáveis</h2>
+          {/* Support Section: Ko-fi & Pix */}
+          <section id="support" class="max-w-3xl mx-auto my-12 px-4 space-y-6">
+            <div class="text-center space-y-2">
+              <h2 class="text-2xl font-bold uppercase tracking-tight">Support My Work</h2>
+              <p class="text-xs text-neutral-400 max-w-md mx-auto">
+                Help keep independent Heavy Metal music alive. Choose your preferred platform below to support future releases!
+              </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {merchProducts.map((product) => (
-                <div key={product.id} class="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden flex flex-col justify-between">
-                  <div class="h-48 overflow-hidden bg-neutral-950">
-                    <img src={product.image} alt={product.name} class="w-full h-full object-cover" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              {/* International Support: Ko-fi */}
+              <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-amber-500 font-bold text-sm">
+                    <i data-lucide="coffee" class="w-5 h-5"></i> International Support
                   </div>
-                  <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3 class="font-bold text-sm text-neutral-200">{product.name}</h3>
-                      <p class="text-red-500 font-extrabold text-base pt-1">{product.price}</p>
-                    </div>
-                    <button class="w-full mt-3 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold py-2.5 rounded-lg border border-neutral-700 transition">
-                      Garantir Item
-                    </button>
-                  </div>
+                  <h3 class="font-bold text-base text-white">Buy me a coffee on Ko-fi ☕</h3>
+                  <p class="text-xs text-neutral-400">
+                    Support directly in USD/EUR from anywhere in the world.
+                  </p>
                 </div>
-              ))}
+                <a 
+                  href={socialLinks.kofi} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="w-full bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-xs py-3 rounded-xl transition text-center flex items-center justify-center gap-2"
+                >
+                  <span>Click Here :: Ko-fi :: Click Here</span>
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+              </div>
+
+              {/* National Support: Pix (Brasil) */}
+              <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                    <i data-lucide="qr-code" class="w-5 h-5"></i> Apoio Nacional (Brasil)
+                  </div>
+                  <h3 class="font-bold text-base text-white">Contribuição via Pix 🇧🇷</h3>
+                  <p class="text-xs text-neutral-400">
+                    Copie a chave Pix abaixo para enviar qualquer valor de apoio ao projeto.
+                  </p>
+                </div>
+                
+                <div class="space-y-2">
+                  <div class="bg-neutral-950 border border-neutral-800 px-3 py-2 rounded-lg text-xs font-mono text-neutral-300 truncate">
+                    {pixKey}
+                  </div>
+                  <button 
+                    onClick={copyPixToClipboard}
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-2"
+                  >
+                    <i data-lucide={copiedPix ? "check" : "copy"} class="w-4 h-4"></i>
+                    <span>{copiedPix ? 'Chave Pix Copiada!' : 'Copiar Chave Pix'}</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {/* Fan Feedback & Comments Section */}
+          <section class="max-w-3xl mx-auto my-12 px-4">
+            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 space-y-6">
+              <div class="flex items-center gap-3 border-b border-neutral-800 pb-4">
+                <i data-lucide="message-square" class="text-red-500 w-6 h-6"></i>
+                <div>
+                  <h2 class="text-xl font-bold">Fan Comments</h2>
+                  <p class="text-xs text-neutral-400">What did you think of the new song? Leave your feedback below!</p>
+                </div>
+              </div>
+
+              {/* Comment Input Form */}
+              <form onSubmit={handleAddComment} class="space-y-3">
+                <input 
+                  type="text" 
+                  required
+                  placeholder="Your Name or Handle"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  class="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                />
+                <textarea 
+                  required
+                  rows="3"
+                  placeholder="Tell us what you felt listening to this track..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  class="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                ></textarea>
+                <button type="submit" class="bg-red-600 hover:bg-red-700 font-bold px-6 py-2.5 rounded-xl text-xs transition uppercase tracking-wider">
+                  Post Comment
+                </button>
+              </form>
+
+              {/* Comments List */}
+              <div class="space-y-3 pt-2">
+                {comments.length === 0 ? (
+                  <p class="text-xs text-neutral-500 italic">No comments yet. Be the first Heavy Metal fan to comment!</p>
+                ) : (
+                  comments.map((item, index) => (
+                    <div key={index} class="bg-neutral-950 p-4 rounded-xl border border-neutral-800/60 space-y-1">
+                      <div class="flex justify-between items-center">
+                        <span class="font-bold text-xs text-red-500">{item.name}</span>
+                        <span class="text-[10px] text-neutral-500">{item.date}</span>
+                      </div>
+                      <p class="text-xs text-neutral-300">{item.text}</p>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </section>
 
           {/* Footer */}
           <footer class="max-w-4xl mx-auto mt-16 px-4 pt-8 border-t border-neutral-800 text-center space-y-4">
-            <p class="text-xs text-neutral-500">© 2026 Marco Brandfer. Todos os direitos reservados.</p>
+            <div class="flex justify-center gap-6">
+              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-white text-xs flex items-center gap-1.5">
+                <i data-lucide="instagram" class="w-4 h-4"></i> Instagram
+              </a>
+              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-red-500 text-xs flex items-center gap-1.5">
+                <i data-lucide="youtube" class="w-4 h-4"></i> YouTube (@Brandfer)
+              </a>
+            </div>
+            <p class="text-xs text-neutral-500">© 2026 Marco Brandfer. All rights reserved.</p>
           </footer>
 
         </div>
