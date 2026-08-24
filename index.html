@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marco Brandfer App</title>
+  <title>Marco Brandfer App - Exclusivo</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <!-- Babel para interpretar JSX -->
+  <!-- Babel -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -19,18 +19,30 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
 
     function MarcoBrandferApp() {
       const [isPlaying, setIsPlaying] = useState(false);
       const [isRegistered, setIsRegistered] = useState(false);
       const [email, setEmail] = useState('');
+      const audioRef = useRef(null);
 
       useEffect(() => {
         if (window.lucide) {
           window.lucide.createIcons();
         }
       }, [isPlaying, isRegistered]);
+
+      const togglePlay = () => {
+        if (audioRef.current) {
+          if (isPlaying) {
+            audioRef.current.pause();
+          } else {
+            audioRef.current.play();
+          }
+          setIsPlaying(!isPlaying);
+        }
+      };
 
       const handleRegister = (e) => {
         e.preventDefault();
@@ -48,6 +60,9 @@
       return (
         <div class="min-h-screen">
           
+          {/* Elemento do Áudio Exclusivo (Caminho para audios/guardian.mp3) */}
+          <audio ref={audioRef} src="./audios/guardian.mp3" onEnded={() => setIsPlaying(false)}></audio>
+
           {/* Header Fixo App */}
           <header class="sticky top-0 z-50 bg-neutral-900/80 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -65,23 +80,23 @@
           <section class="relative bg-neutral-900 border-b border-neutral-800 py-16 px-4 text-center overflow-hidden">
             <div class="relative z-20 max-w-2xl mx-auto space-y-4">
               <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-red-500 font-semibold px-3 py-1 bg-red-950/50 border border-red-800 rounded-full">
-                ✨ Lançamento Oficial
+                🔥 Single Exclusivo
               </span>
-              <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight text-white">
-                Marco Brandfer
+              <h1 class="text-3xl md:text-5xl font-black uppercase tracking-tight text-white">
+                The Guardian of the Hidden Wisdom
               </h1>
               <p class="text-neutral-400 text-sm md:text-base max-w-md mx-auto">
-                A experiência definitiva para os fãs de Heavy Metal e Rock. Ouça, baixe materiais exclusivos e garanta itens colecionáveis.
+                Ouça a faixa exclusiva do Marco Brandfer disponível em primeira mão apenas no Web App.
               </p>
               
-              {/* Player Rápido */}
+              {/* Player Nativo */}
               <div class="pt-4 flex justify-center">
                 <button 
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  class="flex items-center gap-3 bg-neutral-100 text-black font-bold px-6 py-3 rounded-full hover:bg-white transition shadow-lg"
+                  onClick={togglePlay}
+                  class="flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3.5 rounded-full transition shadow-lg shadow-red-900/30"
                 >
-                  <i data-lucide={isPlaying ? "pause" : "play"} class="w-5 h-5"></i>
-                  <span>{isPlaying ? 'Pausar Prévia' : 'Ouvir Música em Destaque'}</span>
+                  <i data-lucide={isPlaying ? "pause" : "play"} class="w-5 h-5 fill-white"></i>
+                  <span>{isPlaying ? 'Pausar Músia' : 'Ouvir "The Guardian of the Hidden Wisdom"'}</span>
                 </button>
               </div>
             </div>
@@ -92,41 +107,43 @@
             <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
               <div class="flex items-center gap-3 mb-4">
                 <i data-lucide="music" class="text-red-500 w-6 h-6"></i>
-                <h2 class="text-xl md:text-2xl font-bold">Área de Membros & Downloads</h2>
+                <h2 class="text-xl md:text-2xl font-bold">Área de Membros VIP</h2>
               </div>
 
               {!isRegistered ? (
                 <div class="space-y-4">
                   <p class="text-neutral-400 text-sm">
-                    Cadastre seu e-mail para desbloquear o download gratuito do novo EP, faixas bônus em alta qualidade e conteúdos exclusivos.
+                    Cadastre seu e-mail para ter acesso VIP e liberar o download do pacote exclusivo de <strong>The Guardian of the Hidden Wisdom</strong> (.ZIP).
                   </p>
                   <form onSubmit={handleRegister} class="flex flex-col sm:flex-row gap-3 pt-2">
                     <input 
                       type="email" 
                       required
-                      placeholder="Digite seu melhor e-mail" 
+                      placeholder="Digite seu e-mail de fã" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       class="bg-neutral-950 border border-neutral-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-red-600 flex-1 text-sm"
                     />
                     <button type="submit" class="bg-red-600 hover:bg-red-700 font-bold px-6 py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                      <span>Desbloquear Downloads</span>
+                      <span>Desbloquear Download</span>
                     </button>
                   </form>
                 </div>
               ) : (
                 <div class="bg-neutral-950/80 border border-green-500/30 p-4 rounded-xl space-y-3">
                   <div class="flex items-center gap-2 text-green-400 font-bold text-sm">
-                    <i data-lucide="user-check" class="w-5 h-5"></i> Acesso VIP Liberado!
+                    <i data-lucide="user-check" class="w-5 h-5"></i> Acesso Liberado!
                   </div>
                   <p class="text-xs text-neutral-400">
-                    Obrigado por se cadastrar. Clique abaixo para baixar seu pacote exclusivo de músicas em alta qualidade.
+                    Seu download está pronto. Clique abaixo para baixar o pacote do single em alta qualidade.
                   </p>
+                  {/* Link direto para downloads/guardian.zip */}
                   <a 
-                    href="#" 
+                    href="./downloads/guardian.zip" 
+                    download="The_Guardian_of_the_Hidden_Wisdom.zip"
                     class="inline-flex items-center gap-2 bg-neutral-100 hover:bg-white text-black font-bold text-xs px-4 py-2.5 rounded-lg transition"
                   >
-                    <i data-lucide="download" class="w-4 h-4"></i> Baixar EP Completo (.ZIP)
+                    <i data-lucide="download" class="w-4 h-4"></i> Baixar Single Completo (.ZIP)
                   </a>
                 </div>
               )}
@@ -142,9 +159,9 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {merchProducts.map((product) => (
-                <div key={product.id} class="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden hover:border-neutral-700 transition flex flex-col justify-between">
+                <div key={product.id} class="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden flex flex-col justify-between">
                   <div class="h-48 overflow-hidden bg-neutral-950">
-                    <img src={product.image} alt={product.name} class="w-full h-full object-cover hover:scale-105 transition duration-300" />
+                    <img src={product.image} alt={product.name} class="w-full h-full object-cover" />
                   </div>
                   <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
                     <div>
@@ -152,7 +169,7 @@
                       <p class="text-red-500 font-extrabold text-base pt-1">{product.price}</p>
                     </div>
                     <button class="w-full mt-3 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold py-2.5 rounded-lg border border-neutral-700 transition">
-                      Comprar / Garantir
+                      Garantir Item
                     </button>
                   </div>
                 </div>
