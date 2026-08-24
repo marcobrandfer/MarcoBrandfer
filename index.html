@@ -30,11 +30,16 @@
       const [userName, setUserName] = useState('');
       const [activeFansCount, setActiveFansCount] = useState(0);
       const [copiedPix, setCopiedPix] = useState(false);
+      const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
+      const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
       const audioRef = useRef(null);
 
-      // Chave Pix de exemplo (Substitua pela sua chave Pix real)
-      const pixKey = "brandfer@hotmail.com"; 
+      // ⚠️ COLE A URL DO SEU SHEETDB AQUI ABAIXO:
+      const SHEETDB_URL = "https://sheetdb.io/api/v1/fh1x3fe0dd2ko"; 
+
+      // Chave Pix Oficial
+      const pixKey = "marcobrandfer@gmail.com"; 
 
       // Links das Redes Oficiais
       const socialLinks = {
@@ -43,16 +48,34 @@
         kofi: "https://ko-fi.com/marcobrandfer"
       };
 
+      // Carregar comentários e contagem diretamente do Google Sheets
       useEffect(() => {
         if (window.lucide) {
           window.lucide.createIcons();
         }
-        
-        const savedComments = JSON.parse(localStorage.getItem('mb_comments') || '[]');
-        const savedEmails = JSON.parse(localStorage.getItem('mb_vip_emails') || '[]');
-        setComments(savedComments);
-        setActiveFansCount(savedEmails.length);
-      }, [isPlaying, isRegistered, comments, copiedPix]);
+
+        // Carregar comentários da aba "Comments"
+        if (SHEETDB_URL && !SHEETDB_URL.includes("SUA_URL_DO_SHEETDB_AQUI")) {
+          fetch(`${SHEETDB_URL}?sheet=Comments`)
+            .then(res => res.json())
+            .then(data => {
+              if (Array.isArray(data)) {
+                setComments(data.reverse()); // Exibe os mais recentes primeiro
+              }
+            })
+            .catch(err => console.error("Erro ao carregar comentários:", err));
+
+          // Contar fãs cadastrados na aba "VIP_Fans"
+          fetch(`${SHEETDB_URL}?sheet=VIP_Fans`)
+            .then(res => res.json())
+            .then(data => {
+              if (Array.isArray(data)) {
+                setActiveFansCount(data.length);
+              }
+            })
+            .catch(err => console.error("Erro ao carregar lista VIP:", err));
+        }
+      }, [copiedPix]);
 
       const togglePlay = () => {
         if (audioRef.current) {
@@ -65,27 +88,70 @@
         }
       };
 
-      const handleRegister = (e) => {
+      // Cadastrar e-mail VIP na planilha
+      const handleRegister = async (e) => {
         e.preventDefault();
-        if (email) {
-          const savedEmails = JSON.parse(localStorage.getItem('mb_vip_emails') || '[]');
-          if (!savedEmails.includes(email)) {
-            savedEmails.push(email);
-            localStorage.setItem('mb_vip_emails', JSON.stringify(savedEmails));
-            setActiveFansCount(savedEmails.length);
+        if (!email) return;
+
+        setIsSubmittingEmail(true);
+        const today = new Date().toLocaleDateString('pt-BR');
+
+        try {
+          if (SHEETDB_URL && !SHEETDB_URL.includes("SUA_URL_DO_SHEETDB_AQUI")) {
+            await fetch(`${SHEETDB_URL}?sheet=VIP_Fans`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                data: [{ email: email, date: today }]
+              })
+            });
           }
           setIsRegistered(true);
+          setActiveFansCount(prev => prev + 1);
+        } catch (err) {
+          console.error("Erro ao salvar email:", err);
+          setIsRegistered(true); // Permite download mesmo se der erro
+        } finally {
+          setIsSubmittingEmail(false);
         }
       };
 
-      const handleAddComment = (e) => {
+      // Gerador de Avatar Estilizado
+      const getRockAvatar = (name) => {
+        const cleanName = encodeURIComponent(name.trim().toLowerCase());
+        return `https://api.dicebear.com/7.x/bottts/svg?seed=${cleanName}&backgroundColor=000000,b91c1c,171717`;
+      };
+
+      // Postar comentário no Google Sheets
+      const handleAddComment = async (e) => {
         e.preventDefault();
-        if (newComment.trim() && userName.trim()) {
-          const updated = [{ name: userName, text: newComment, date: new Date().toLocaleDateString() }, ...comments];
-          setComments(updated);
-          localStorage.setItem('mb_comments', JSON.stringify(updated));
+        if (!newComment.trim() || !userName.trim()) return;
+
+        setIsSubmittingComment(true);
+        const avatarUrl = getRockAvatar(userName);
+        const today = new Date().toLocaleDateString('pt-BR');
+        const commentObj = {
+          name: userName,
+          text: newComment,
+          date: today,
+          avatar: avatarUrl
+        };
+
+        try {
+          if (SHEETDB_URL && !SHEETDB_URL.includes("SUA_URL_DO_SHEETDB_AQUI")) {
+            await fetch(`${SHEETDB_URL}?sheet=Comments`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ data: [commentObj] })
+            });
+          }
+          setComments([commentObj, ...comments]);
           setNewComment('');
           setUserName('');
+        } catch (err) {
+          console.error("Erro ao postar comentário:", err);
+        } finally {
+          setIsSubmittingComment(false);
         }
       };
 
@@ -177,8 +243,12 @@
                       onChange={(e) => setEmail(e.target.value)}
                       class="bg-neutral-950 border border-neutral-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-red-600 flex-1 text-sm"
                     />
-                    <button type="submit" class="bg-red-600 hover:bg-red-700 font-bold px-6 py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
-                      <span>Unlock Download</span>
+                    <button 
+                      type="submit" 
+                      disabled={isSubmittingEmail}
+                      class="bg-red-600 hover:bg-red-700 font-bold px-6 py-3 rounded-xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <span>{isSubmittingEmail ? 'Unlocking...' : 'Unlock Download'}</span>
                     </button>
                   </form>
                 </div>
@@ -270,8 +340,8 @@
               <div class="flex items-center gap-3 border-b border-neutral-800 pb-4">
                 <i data-lucide="message-square" class="text-red-500 w-6 h-6"></i>
                 <div>
-                  <h2 class="text-xl font-bold">Fan Comments</h2>
-                  <p class="text-xs text-neutral-400">What did you think of the new song? Leave your feedback below!</p>
+                  <h2 class="text-xl font-bold">Fan Comments & Community</h2>
+                  <p class="text-xs text-neutral-400">What did you think of the new song? Post below and get your metal avatar!</p>
                 </div>
               </div>
 
@@ -280,7 +350,7 @@
                 <input 
                   type="text" 
                   required
-                  placeholder="Your Name or Handle"
+                  placeholder="Your Name or Handle (ex: MetalVocalist)"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   class="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
@@ -293,8 +363,13 @@
                   onChange={(e) => setNewComment(e.target.value)}
                   class="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
                 ></textarea>
-                <button type="submit" class="bg-red-600 hover:bg-red-700 font-bold px-6 py-2.5 rounded-xl text-xs transition uppercase tracking-wider">
-                  Post Comment
+                <button 
+                  type="submit" 
+                  disabled={isSubmittingComment}
+                  class="bg-red-600 hover:bg-red-700 font-bold px-6 py-2.5 rounded-xl text-xs transition uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
+                >
+                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                  <span>{isSubmittingComment ? 'Posting...' : 'Post Comment'}</span>
                 </button>
               </form>
 
@@ -304,12 +379,21 @@
                   <p class="text-xs text-neutral-500 italic">No comments yet. Be the first Heavy Metal fan to comment!</p>
                 ) : (
                   comments.map((item, index) => (
-                    <div key={index} class="bg-neutral-950 p-4 rounded-xl border border-neutral-800/60 space-y-1">
-                      <div class="flex justify-between items-center">
-                        <span class="font-bold text-xs text-red-500">{item.name}</span>
-                        <span class="text-[10px] text-neutral-500">{item.date}</span>
+                    <div key={index} class="bg-neutral-950 p-4 rounded-xl border border-neutral-800/60 flex gap-3.5 items-start">
+                      <div class="w-10 h-10 rounded-xl bg-neutral-900 border border-neutral-800 p-1 flex-shrink-0 overflow-hidden">
+                        <img 
+                          src={item.avatar || getRockAvatar(item.name)} 
+                          alt={item.name} 
+                          class="w-full h-full object-contain"
+                        />
                       </div>
-                      <p class="text-xs text-neutral-300">{item.text}</p>
+                      <div class="flex-1 space-y-1">
+                        <div class="flex justify-between items-center">
+                          <span class="font-bold text-xs text-red-500">{item.name}</span>
+                          <span class="text-[10px] text-neutral-500">{item.date}</span>
+                        </div>
+                        <p class="text-xs text-neutral-300 leading-relaxed">{item.text}</p>
+                      </div>
                     </div>
                   ))
                 )}
