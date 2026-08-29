@@ -180,19 +180,26 @@
             </div>
           </header>
 
-          {/* Hero Section com Imagem Ajustada */}
-          <section 
-            className="relative w-full h-[65vh] md:h-[85vh] flex items-end justify-center pb-8 px-4 bg-contain md:bg-cover bg-top bg-no-repeat rounded-b-3xl border-b border-neutral-800 shadow-2xl" 
-            style={{ backgroundImage: "url('./images/TheGuardian.jpg')" }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent opacity-90"></div>
+          {/* Hero Section com Ajuste Responsivo Avançado */}
+          <section className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] flex items-end justify-center pb-6 sm:pb-8 px-4 rounded-b-3xl border-b border-neutral-800 shadow-2xl overflow-hidden bg-neutral-950">
+            
+            {/* Imagem de Fundo Inteligente */}
+            <img 
+              src="./images/superiorguardian.jpg" 
+              alt="The Guardian of Hidden Wisdom" 
+              className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
+            />
 
-            <div className="relative z-20 text-center">
+            {/* Sombra de degrade para leitura do botao */}
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
+
+            {/* Botão de Ação */}
+            <div className="relative z-20 text-center w-full max-w-xs sm:max-w-none">
               <button 
                 onClick={togglePlay}
-                className="flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl shadow-red-950/80 border border-red-500/40 backdrop-blur-sm"
+                className="w-full sm:w-auto flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-wider px-6 sm:px-8 py-3.5 sm:py-4 rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl shadow-red-950/80 border border-red-500/40 backdrop-blur-sm text-xs sm:text-sm"
               >
-                <i data-lucide={isPlaying ? "pause" : "play"} className="w-6 h-6 fill-white"></i>
+                <i data-lucide={isPlaying ? "pause" : "play"} className="w-5 h-5 sm:w-6 sm:h-6 fill-white"></i>
                 <span>{isPlaying ? 'Pausar Músicas' : 'Ouvir "The Guardian of Hidden Wisdom"'}</span>
               </button>
             </div>
@@ -293,7 +300,7 @@
                   <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
                     <i data-lucide="qr-code" className="w-5 h-5"></i> Apoio Nacional (Brasil)
                   </div>
-                  <h3 class="font-bold text-base text-white">Contribuição via Pix 🇧🇷</h3>
+                  <h3 className="font-bold text-base text-white">Contribuição via Pix 🇧🇷</h3>
                   <p className="text-xs text-neutral-400">
                     Copie a chave Pix abaixo para enviar qualquer valor de apoio ao projeto.
                   </p>
