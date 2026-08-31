@@ -35,7 +35,7 @@
       const SHEETDB_URL = "https://sheetdb.io/api/v1/fh1x3fe0dd2ko"; 
 
       // Chave Pix Oficial
-      const pixKey = "marcobrandfer@gmail.com"; 
+      const pixKey = "brandfer@hotmail.com"; 
 
       // Links das Redes Oficiais
       const socialLinks = {
@@ -61,8 +61,8 @@
             })
             .catch(err => console.error("Erro ao carregar comentários:", err));
 
-          // Buscar Quantidade de Fãs VIP
-          fetch(`${SHEETDB_URL}?sheet=VIP_Fans`)
+          // Buscar Quantidade de Fãs VIP (Aba Vip_Fans)
+          fetch(`${SHEETDB_URL}?sheet=Vip_Fans`)
             .then(res => res.json())
             .then(data => {
               if (Array.isArray(data)) {
@@ -93,7 +93,8 @@
 
         try {
           if (SHEETDB_URL) {
-            await fetch(`${SHEETDB_URL}?sheet=VIP_Fans`, {
+            // Envio apontando exatamente para Vip_Fans
+            await fetch(`${SHEETDB_URL}?sheet=Vip_Fans`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
