@@ -39,7 +39,7 @@
       // URL do SheetDB Integrada
       const SHEETDB_URL = "https://sheetdb.io/api/v1/fh1x3fe0dd2ko"; 
 
-      // Chave Pix Oficial Atualizada
+      // Chave Pix Oficial
       const pixKey = "brandfer@hotmail.com"; 
 
       // Links das Redes Oficiais
@@ -49,40 +49,49 @@
         kofi: "https://ko-fi.com/marcobrandfer"
       };
 
-      // Músicas com as capas e arquivos reais
+      // Músicas com as capas e arquivos ajustados
       const tracks = [
-  {
-    id: 'guardian',
-    title: 'The Guardian of Hidden Wisdom',
-    subtitle: 'Single Oficial #1',
-    cover: './images/capaguardian.jpg',
-    audioPreview: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
-    downloadZip: './downloads/Marco Brandfer - The Guardian of Hidden Wisdom.zip'
-  },
-  {
-    id: 'raining_tears',
-    title: 'Raining Tears',
-    subtitle: 'Single Oficial #2',
-    cover: './images/caparaining.jpg',
-    audioPreview: './audios/Marco Brandfer - Raining Tears.mp3',
-    downloadZip: './downloads/Marco Brandfer - Raining Tears.zip'
-  },
-  {
-    id: 'dark_clouds',
-    title: 'Dark Clouds',
-    subtitle: 'Single Oficial #3',
-    cover: './images/capadarkclouds.jpg',
-    audioPreview: './audios/Marco Brandfer - Dark Clouds.mp3',
-    downloadZip: './downloads/Marco Brandfer - Dark Clouds.zip'
-  }
-];
+        {
+          id: 'guardian',
+          title: 'The Guardian of Hidden Wisdom',
+          subtitle: 'Single Oficial #1',
+          cover: './images/capaguardian.jpg',
+          audioPreview: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
+          downloadZip: './downloads/Marco Brandfer - The Guardian of Hidden Wisdom.zip'
+        },
+        {
+          id: 'raining_tears',
+          title: 'Raining Tears',
+          subtitle: 'Single Oficial #2',
+          cover: './images/caparaining.jpg',
+          audioPreview: './audios/Marco Brandfer - Raining Tears.mp3',
+          downloadZip: './downloads/Marco Brandfer - Raining Tears.zip'
+        },
+        {
+          id: 'dark_clouds',
+          title: 'Dark Clouds',
+          subtitle: 'Single Oficial #3',
+          cover: './images/capadarkclouds.jpg',
+          audioPreview: './audios/Marco Brandfer - Dark Clouds.mp3',
+          downloadZip: './downloads/Marco Brandfer - Dark Clouds.zip'
+        }
+      ];
 
-      // Carregar dados iniciais da planilha
+      // Áudio de Introdução da Hero Section
+      const introAudio = {
+        id: 'hero_intro',
+        audioPreview: './audios/guardian.mp3'
+      };
+
+      // Recarregar ícones Lucide sempre que a interface renderizar
       useEffect(() => {
         if (window.lucide) {
           window.lucide.createIcons();
         }
+      });
 
+      // Carregar dados iniciais da planilha
+      useEffect(() => {
         if (SHEETDB_URL) {
           fetch(`${SHEETDB_URL}?sheet=Comments`)
             .then(res => res.json())
@@ -107,19 +116,19 @@
             })
             .catch(err => console.error("Erro ao carregar métricas de downloads:", err));
         }
-      }, [copiedPix]);
+      }, []);
 
-      // Controladores de Áudio e Barra de Progresso
-      const togglePlayTrack = (track) => {
-        if (currentPlayingId === track.id) {
+      // Controladores de Áudio e Progresso
+      const togglePlayTrack = (trackId, audioSrc) => {
+        if (currentPlayingId === trackId) {
           if (audioRef.current) audioRef.current.pause();
           setCurrentPlayingId(null);
         } else {
           if (audioRef.current) {
-            audioRef.current.src = track.audioPreview;
+            audioRef.current.src = audioSrc;
             audioRef.current.play();
           }
-          setCurrentPlayingId(track.id);
+          setCurrentPlayingId(trackId);
         }
       };
 
@@ -267,13 +276,56 @@
                 <i data-lucide="youtube" className="w-5 h-5"></i>
               </a>
               <a href="#support" className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-bold transition ml-2">
-                Support
+                Apoiar
               </a>
             </div>
           </header>
 
-          {/* Vitrine de Músicas com Mini Player Interativo */}
-          <section className="max-w-5xl mx-auto my-8 px-4 space-y-6">
+          {/* Item 3: Banner Hero com Mensagem Falada e Foto */}
+          <section className="max-w-5xl mx-auto mt-6 px-4">
+            <div className="relative bg-gradient-to-r from-neutral-900 via-neutral-900/90 to-neutral-950 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row items-center">
+              
+              {/* Arte da Foto de Capa / Hero */}
+              <div className="w-full md:w-1/2 aspect-video md:aspect-square relative overflow-hidden bg-neutral-950">
+                <img 
+                  src="./images/hero-banner.jpg" 
+                  alt="Marco Brandfer" 
+                  className="w-full h-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 md:bg-gradient-to-r md:from-transparent md:to-neutral-900"></div>
+              </div>
+
+              {/* Conteúdo e Player de Chamada */}
+              <div className="w-full md:w-1/2 p-6 md:p-10 space-y-4">
+                <span className="text-xs uppercase tracking-widest font-bold text-red-500 flex items-center gap-2">
+                  <i data-lucide="volume-2" className="w-4 h-4"></i> Mensagem Especial para os Fãs
+                </span>
+                
+                <h2 className="text-2xl md:text-3xl font-black uppercase leading-tight text-white">
+                  Bem-vindo ao Universo do Heavy Metal
+                </h2>
+                
+                <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
+                  Ouça a mensagem de introdução de 35s sobre <strong className="text-neutral-200">The Guardian of Hidden Wisdom</strong> e descubra a história por trás deste lançamento.
+                </p>
+
+                {/* Botão de Play de Chamada */}
+                <div className="pt-2">
+                  <button 
+                    onClick={() => togglePlayTrack(introAudio.id, introAudio.audioPreview)}
+                    className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 rounded-2xl transition flex items-center justify-center gap-3 shadow-lg shadow-red-950/50 group"
+                  >
+                    <i data-lucide={currentPlayingId === introAudio.id ? "pause" : "play"} className="w-5 h-5 fill-white group-hover:scale-110 transition"></i>
+                    <span>{currentPlayingId === introAudio.id ? "Pausar Mensagem" : "Ouvir Chamada (35s)"}</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {/* Vitrine de Novos Lançamentos */}
+          <section className="max-w-5xl mx-auto my-12 px-4 space-y-6">
             <div className="text-center space-y-2">
               <h1 className="text-3xl font-black uppercase tracking-tight">Novos Lançamentos</h1>
               <p className="text-xs text-neutral-400 max-w-md mx-auto">
@@ -310,11 +362,11 @@
                           <h3 className="font-bold text-base text-white line-clamp-1">{track.title}</h3>
                         </div>
 
-                        {/* Player Interativo */}
+                        {/* Player Interativo com Alternância Play / Pause */}
                         <div className="bg-neutral-950/80 border border-neutral-800/80 rounded-xl p-3 space-y-2">
                           <div className="flex items-center gap-3">
                             <button 
-                              onClick={() => togglePlayTrack(track)}
+                              onClick={() => togglePlayTrack(track.id, track.audioPreview)}
                               className="bg-red-600 hover:bg-red-700 text-white p-2.5 rounded-full transition flex-shrink-0 flex items-center justify-center shadow-md shadow-red-950"
                             >
                               <i data-lucide={isThisPlaying ? "pause" : "play"} className="w-4 h-4 fill-white"></i>
@@ -341,7 +393,8 @@
                       </div>
                     </div>
 
-                    <div className="p-4 pt-0">
+                    {/* Botões de Ação Atualizados: Desbloquear Download Grátis e Apoiar */}
+                    <div className="p-4 pt-0 space-y-2">
                       <a 
                         href={isRegistered ? track.downloadZip : "#vip"}
                         download={isRegistered ? `${track.title}.zip` : undefined}
@@ -353,7 +406,15 @@
                         }`}
                       >
                         <i data-lucide={isRegistered ? "download" : "lock"} className="w-4 h-4"></i>
-                        <span>{isRegistered ? 'Baixar Faixa (.ZIP)' : 'Desbloquear Download'}</span>
+                        <span>{isRegistered ? 'Baixar Faixa (.ZIP)' : 'Desbloquear Download Grátis'}</span>
+                      </a>
+
+                      <a 
+                        href="#support" 
+                        className="w-full py-2 rounded-xl font-bold text-xs bg-transparent hover:bg-neutral-800/80 text-neutral-400 hover:text-white border border-neutral-800 flex items-center justify-center gap-2 transition"
+                      >
+                        <i data-lucide="handshake" className="w-4 h-4 text-red-500"></i>
+                        <span>Apoiar Projeto</span>
                       </a>
                     </div>
                   </div>
@@ -378,13 +439,13 @@
               {!isRegistered ? (
                 <div className="space-y-4">
                   <p className="text-neutral-400 text-sm">
-                    Enter your email to join the VIP list and unlock high-quality instant downloads for all tracks.
+                    Cadastre seu e-mail para ter acesso VIP e desbloquear o download grátis de todos os singles em alta qualidade.
                   </p>
                   <form onSubmit={handleRegister} className="flex flex-col sm:flex-row gap-3 pt-2">
                     <input 
                       type="email" 
                       required
-                      placeholder="Enter your best email" 
+                      placeholder="Digite seu melhor e-mail" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="bg-neutral-950 border border-neutral-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-red-600 flex-1 text-sm"
@@ -394,14 +455,14 @@
                       disabled={isSubmittingEmail}
                       className="bg-red-600 hover:bg-red-700 font-bold px-6 py-3 rounded-xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      <span>{isSubmittingEmail ? 'Unlocking...' : 'Unlock Downloads'}</span>
+                      <span>{isSubmittingEmail ? 'Liberando...' : 'Desbloquear Downloads'}</span>
                     </button>
                   </form>
                 </div>
               ) : (
                 <div className="bg-neutral-950/80 border border-green-500/30 p-4 rounded-xl space-y-2">
                   <div className="flex items-center gap-2 text-green-400 font-bold text-sm">
-                    <i data-lucide="user-check" className="w-5 h-5"></i> VIP Access Granted!
+                    <i data-lucide="user-check" className="w-5 h-5"></i> Acesso VIP Liberado!
                   </div>
                   <p className="text-xs text-neutral-400">
                     Você já possui acesso liberado. Escolha qualquer uma das músicas nos cards acima para realizar o download direto do arquivo .ZIP.
@@ -414,9 +475,9 @@
           {/* Support Section */}
           <section id="support" className="max-w-3xl mx-auto my-12 px-4 space-y-6">
             <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold uppercase tracking-tight">Support My Work</h2>
+              <h2 className="text-2xl font-bold uppercase tracking-tight">Apoie o Projeto</h2>
               <p className="text-xs text-neutral-400 max-w-md mx-auto">
-                Help keep independent Heavy Metal music alive. Choose your preferred platform below to support future releases!
+                Ajude a manter a produção de Heavy Metal independente ativa. Escolha a melhor plataforma abaixo para apoiar os próximos lançamentos!
               </p>
             </div>
 
@@ -427,7 +488,7 @@
                     <i data-lucide="coffee" className="w-5 h-5"></i> International Support
                   </div>
                   <h3 className="font-bold text-base text-white">Buy me a coffee on Ko-fi ☕</h3>
-                  <p className="text-xs text-neutral-400">Support directly in USD/EUR from anywhere in the world.</p>
+                  <p className="text-xs text-neutral-400">Apoio internacional diretamente via Ko-fi em USD/EUR.</p>
                 </div>
                 <a 
                   href={socialLinks.kofi} 
@@ -435,7 +496,7 @@
                   rel="noopener noreferrer"
                   className="w-full bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-xs py-3 rounded-xl transition text-center flex items-center justify-center gap-2"
                 >
-                  <span>Click Here :: Ko-fi :: Click Here</span>
+                  <span>Apoiar via Ko-fi</span>
                   <i data-lucide="external-link" className="w-4 h-4"></i>
                 </a>
               </div>
@@ -446,7 +507,7 @@
                     <i data-lucide="qr-code" className="w-5 h-5"></i> Apoio Nacional (Brasil)
                   </div>
                   <h3 className="font-bold text-base text-white">Contribuição via Pix 🇧🇷</h3>
-                  <p className="text-xs text-neutral-400">Copie a chave Pix abaixo para enviar qualquer valor de apoio ao projeto.</p>
+                  <p className="text-xs text-neutral-400">Copie a chave Pix abaixo para enviar qualquer valor de apoio.</p>
                 </div>
                 
                 <div className="space-y-2">
@@ -471,8 +532,8 @@
               <div className="flex items-center gap-3 border-b border-neutral-800 pb-4">
                 <i data-lucide="message-square" className="text-red-500 w-6 h-6"></i>
                 <div>
-                  <h2 className="text-xl font-bold">Fan Comments & Community</h2>
-                  <p className="text-xs text-neutral-400">What did you think of the new songs? Post below and get your metal avatar!</p>
+                  <h2 className="text-xl font-bold">Mural dos Fãs & Comunidade</h2>
+                  <p className="text-xs text-neutral-400">O que achou das novas músicas? Deixe seu comentário abaixo!</p>
                 </div>
               </div>
 
@@ -480,7 +541,7 @@
                 <input 
                   type="text" 
                   required
-                  placeholder="Your Name or Handle (ex: MetalVocalist)"
+                  placeholder="Seu Nome ou Nick (ex: MetalVocalist)"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
@@ -488,7 +549,7 @@
                 <textarea 
                   required
                   rows="3"
-                  placeholder="Tell us what you felt listening to these tracks..."
+                  placeholder="Conte o que você achou das faixas..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
@@ -499,13 +560,13 @@
                   className="bg-red-600 hover:bg-red-700 font-bold px-6 py-2.5 rounded-xl text-xs transition uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
                 >
                   <i data-lucide="send" className="w-3.5 h-3.5"></i>
-                  <span>{isSubmittingComment ? 'Posting...' : 'Post Comment'}</span>
+                  <span>{isSubmittingComment ? 'Enviando...' : 'Publicar Comentário'}</span>
                 </button>
               </form>
 
               <div className="space-y-3 pt-2">
                 {comments.length === 0 ? (
-                  <p className="text-xs text-neutral-500 italic">No comments yet. Be the first Heavy Metal fan to comment!</p>
+                  <p className="text-xs text-neutral-500 italic">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
                 ) : (
                   comments.map((item, index) => (
                     <div key={index} className="bg-neutral-950 p-4 rounded-xl border border-neutral-800/60 flex gap-3.5 items-start">
@@ -530,16 +591,37 @@
             </div>
           </section>
 
-          {/* Footer */}
-          <footer className="max-w-4xl mx-auto mt-16 px-4 pt-8 border-t border-neutral-800 text-center space-y-4">
-            <div className="flex justify-center gap-6">
-              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white text-xs flex items-center gap-1.5">
-                <i data-lucide="instagram" className="w-4 h-4"></i> Instagram
+          {/* Item 1: Rodapé com Ícones das Redes Sociais */}
+          <footer className="max-w-4xl mx-auto mt-16 px-4 pt-8 border-t border-neutral-800 text-center space-y-6">
+            <div className="flex justify-center items-center gap-8">
+              <a 
+                href={socialLinks.instagram} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-neutral-400 hover:text-white transition flex items-center gap-2 text-xs font-bold"
+              >
+                <i data-lucide="instagram" className="w-5 h-5 text-red-500"></i> Instagram
               </a>
-              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-red-500 text-xs flex items-center gap-1.5">
-                <i data-lucide="youtube" className="w-4 h-4"></i> YouTube (@Brandfer)
+
+              <a 
+                href={socialLinks.youtube} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-neutral-400 hover:text-red-500 transition flex items-center gap-2 text-xs font-bold"
+              >
+                <i data-lucide="youtube" className="w-5 h-5 text-red-500"></i> YouTube (@Brandfer)
+              </a>
+
+              <a 
+                href={socialLinks.kofi} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-neutral-400 hover:text-amber-400 transition flex items-center gap-2 text-xs font-bold"
+              >
+                <i data-lucide="coffee" className="w-5 h-5 text-amber-500"></i> Ko-fi
               </a>
             </div>
+
             <p className="text-xs text-neutral-500">© 2026 Marco Brandfer. All rights reserved.</p>
           </footer>
 
