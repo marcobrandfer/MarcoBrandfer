@@ -316,7 +316,7 @@
                     className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 rounded-2xl transition flex items-center justify-center gap-3 shadow-lg shadow-red-950/50 group"
                   >
                     <i data-lucide={currentPlayingId === introAudio.id ? "pause" : "play"} className="w-5 h-5 fill-white group-hover:scale-110 transition"></i>
-                    <span>{currentPlayingId === introAudio.id ? "Pausar Mensagem" : "Click e ouça"}</span>
+                    <span>{currentPlayingId === introAudio.id ? "Pausar" : "Click e ouça"}</span>
                   </button>
                 </div>
               </div>
@@ -533,7 +533,7 @@
                 <i data-lucide="message-square" className="text-red-500 w-6 h-6"></i>
                 <div>
                   <h2 className="text-xl font-bold">Mural dos Fãs & Comunidade</h2>
-                  <p className="text-xs text-neutral-400">O que achou das novas músicas? Deixe seu comentário abaixo!</p>
+                  <p className="text-xs text-neutral-400">Qual a sua Faixa Favorita? Ouça e Deixe seu comentário abaixo!</p>
                 </div>
               </div>
 
@@ -541,7 +541,7 @@
                 <input 
                   type="text" 
                   required
-                  placeholder="Seu Nome ou Nick (ex: MetalVocalist)"
+                  placeholder="Seu Nome ou Nick"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
@@ -549,7 +549,7 @@
                 <textarea 
                   required
                   rows="3"
-                  placeholder="Conte o que você achou das faixas..."
+                  placeholder="Ouça as 3 faixas e diga qual a sua Favorita..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
