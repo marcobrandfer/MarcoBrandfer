@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,9 +27,8 @@
       const [comments, setComments] = useState([]);
       const [newComment, setNewComment] = useState('');
       const [userName, setUserName] = useState('');
-      const [activeFansCount, setActiveFansCount] = useState(342); // Base inicial fictícia de Fãs VIP
+      const [activeFansCount, setActiveFansCount] = useState(342);
       
-      // Downloads Iniciais Fictícios + Downloads Reais
       const [downloadCounts, setDownloadCounts] = useState({
         guardian: 1240,
         raining_tears: 980,
@@ -39,6 +38,11 @@
       const [copiedPix, setCopiedPix] = useState(false);
       const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
       const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+
+      // Estado para a Modal de Letras
+      const [selectedLyricsTrack, setSelectedLyricsTrack] = useState(null);
+      const [lyricsLang, setLyricsLang] = useState('en'); // 'en' ou 'pt'
+      const [copiedLyrics, setCopiedLyrics] = useState(false);
 
       const audioRef = useRef(null);
       const vipSectionRef = useRef(null);
@@ -59,7 +63,87 @@
           subtitle: 'Single Oficial #1',
           cover: './images/capaguardian.jpg',
           audioPreview: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
-          downloadZip: './downloads/Marco Brandfer - The Guardian of Hidden Wisdom.zip'
+          downloadZip: './downloads/Marco Brandfer - The Guardian of Hidden Wisdom.zip',
+          lyrics: {
+            en: `“Who´s the watchmen ?”
+
+Through ancient halls, forgotten and cold
+Lies a secret no one has ever told
+A keeper stands, beyond the night
+Guarding the wisdom, sealed from sight
+
+In shadows deep, where the ages sleep
+A power to awaken, for those who seek    
+
+The guardian stands, with knowledge untamed
+The key to the mysteries, to the mysteries forever proclaimed
+
+In silence he waits, The truth of the ages
+beyond the kingdom…
+The Guardian of Hidden Wisdom
+
+“He is the watchmen ?”
+
+The scrolls of old, in his hands they remain
+Holding the answers to break every chain
+He watches the world, in its endless strife  
+Knowing the truth could alter life
+
+In shadows deep, where the ages sleep
+A power to awaken, for those who seek
+
+The guardian stands, with knowledge untamed
+The key to the mysteries, to the mysteries forever proclaimed
+
+In silence he waits, The truth of the ages
+beyond the kingdom…
+The Guardian of Hidden Wisdom
+
+Only the worthy may cross the line
+To glimpse the light that forever shines
+But the price is steep, for the truth you crave
+For wisdom may grant or lead to the grave`,
+            pt: `"O Guardião da Sabedoria Oculta"
+
+Por corredores antigos, esquecidos e frios
+Reside um segredo que ninguém abriu
+Um guardião vigia além do luar
+Protegendo a sabedoria, difícil de achar
+
+Nas sombras profundas, onde o tempo jaz
+Um poder desperta, se alguém capaz
+
+O guardião vigia, o saber guardado
+A chave dos mistérios, eternamente selado
+
+Em silêncio ele espera, além da força absoluta
+O Guardião da Sabedoria Oculta
+
+Pergaminhos antigos, em suas mãos estão
+Contendo respostas para toda prisão
+Ele observa o mundo em eterno conflito
+Sabendo que a verdade mudaria o escrito
+
+Nas sombras profundas, onde o tempo jaz
+Um poder desperta, se alguém capaz
+
+O guardião vigia, o saber guardado
+A chave dos mistérios, eternamente selado
+
+Em silêncio ele espera, além da força absoluta
+O Guardião da Sabedoria Oculta
+
+Somente os dignos podem atravessar
+Para ver a luz que sempre a brilhar
+Mas o preço é alto, pelo saber que se anseia
+Pois a sabedoria pode libertar ou levar à cadeia
+
+O guardião vigia, o saber guardado
+A chave dos mistérios, eternamente selado
+
+Em silêncio ele espera, além da força absoluta
+O Guardião da Sabedoria Oculta`
+          }
         },
         {
           id: 'raining_tears',
@@ -67,7 +151,133 @@
           subtitle: 'Single Oficial #2',
           cover: './images/caparaining.jpg',
           audioPreview: './audios/Marco Brandfer - Raining Tears.mp3',
-          downloadZip: './downloads/Marco Brandfer - Raining Tears.zip'
+          downloadZip: './downloads/Marco Brandfer - Raining Tears.zip',
+          lyrics: {
+            en: `Broken lands beneath the fire
+Children starving in the cold
+The laughter of Kings from their towers
+Trading blood instead of gold
+
+Shadows march across the valleys
+Burning homes that once were bright
+Mothers praying in the silence
+While the tyrants feast tonight
+
+Hear the crying of the fallen
+Echoes rising through the rain
+How many souls must disappear
+For madmen to embrace their reign?
+
+It's raining tears, oh God!
+From the skies of human pain
+The innocent keep dying
+While the powerful remain
+
+It's raining tears, oh God!
+Can you hear the desperate screams?
+The world is drowning slowly
+In the ashes of their dreams
+
+Silver crowns and crimson banners
+Built upon the poor man's grave
+Empty words of false salvation
+Turn the free into the slaves
+
+Every bomb becomes a sentence
+Every child another scar
+Still the rulers drink their wine
+And watch the slaughter from afar
+
+Can the thunder hide the sorrow?
+Can the darkness kill the truth?
+
+The wolves are wearing holy robes
+Devouring the hopes of youth
+
+It's raining tears, oh God!
+From the skies of human pain
+The innocent keep dying
+While the powerful remain
+
+It's raining tears, oh God!
+Can you hear the desperate screams?
+The world is drowning slowly
+In the ashes of their dreams
+
+“One day, the storm will turn against them and the glorious thunder will destroy their evil thrones... Oh God… It´s raining tears…”
+
+It's raining tears, oh God!
+Let the heavens break the chains
+No more kings above the people
+No more profit made from pain
+
+It's raining tears, oh God!
+Hear the anthem of the free
+From the ruins of oppression
+We will rise eternally`,
+            pt: `Terras devastadas sob o fogo
+Crianças famintas no frio
+O riso dos Reis de suas torres
+Trocando sangue ao invés de ouro
+
+Sombras marcham pelos vales
+Queimando lares outrora iluminados
+Mães rezando no silêncio
+Enquanto tiranos banqueteiam esta noite
+
+Ouça o clamor dos caídos
+Ecos surgindo através da chuva
+Quantas almas precisam desaparecer
+Para loucos abraçarem seu reinado?
+
+Está chovendo lágrimas, ó Deus!
+Dos céus da dor humana
+Os inocentes continuam morrendo
+Enquanto os poderosos permanecem
+
+Está chovendo lágrimas, ó Deus!
+Você consegue ouvir os gritos desesperados?
+O mundo está se afogando lentamente
+Nas cinzas de seus sonhos
+
+Coroas de prata e estandartes carmesim
+Construídos sobre a cova do homem pobre
+Palavras vazias de falsa salvação
+Transformam os livres em escravos
+
+Cada bomba se torna uma sentença
+Cada criança outra cicatriz
+Os governantes ainda bebem seu vinho
+E observam o massacre de longe
+
+Poderá o trovão esconder a tristeza?
+Poderá a escuridão matar a verdade?
+
+Os lobos vestem trajes sagrados
+Devorando as esperanças da juventude
+
+Está chovendo lágrimas, ó Deus!
+Dos céus da dor humana
+Os inocentes continuam morrendo
+Enquanto os poderosos permanecem
+
+Está chovendo lágrimas, ó Deus!
+Você consegue ouvir os gritos desesperados?
+O mundo está se afogando lentamente
+Nas cinzas de seus sonhos
+
+"Um dia, a tempestade se voltará contra eles e o trovão glorioso destruirá seus tronos malignos... Ó Deus... Está chovendo lágrimas..."
+
+Está chovendo lágrimas, ó Deus!
+Que os céus quebrem as correntes
+Chega de reis acima do povo
+Chega de lucro gerado pela dor
+
+Está chovendo lágrimas, ó Deus!
+Ouça o hino dos livres
+Das ruínas da opressão
+Nós nos ergueremos eternamente`
+          }
         },
         {
           id: 'dark_clouds',
@@ -75,7 +285,75 @@
           subtitle: 'Single Oficial #3',
           cover: './images/capadarkclouds.jpg',
           audioPreview: './audios/Marco Brandfer - Dark Clouds.mp3',
-          downloadZip: './downloads/Marco Brandfer - Dark Clouds.zip'
+          downloadZip: './downloads/Marco Brandfer - Dark Clouds.zip',
+          lyrics: {
+            en: `Where are my friends?
+Where is my family
+I´m drained to the bone
+My energy is gone..
+
+I feel so heavy
+I'm yawning all the time
+This damned migraine…
+I wanna see the light again ...
+
+I don’t know why all those dark clouds
+hang in the sky…
+
+Loneliness, deep anguish in my heart
+I'm crying, screaming, crying out loud,
+Many people around me but no one can hear me
+
+Sadness, depression fills my head
+Darkness, Infinity, Black Hole
+As the day drags on,
+I Sink deeper inside myself
+
+Old Howling Wind
+Blowing Wind,
+Show me your power
+and take these dark clouds away
+
+I don’t know why all those dark clouds
+hang in the sky…
+
+Old Howling Wind blow upon my face
+The Migraine fades away
+Now I can see the light again`,
+            pt: `Onde estão meus amigos?
+Onde está minha família?
+Estou esgotado até os ossos
+Minha energia se foi...
+
+Sinto-me tão pesado
+Estou bocejando o tempo todo
+Esta maldita enxaqueca...
+Eu quero ver a luz novamente...
+
+Eu não sei por que todas essas nuvens escuras
+pairam no céu...
+
+Solidão, profunda angústia em meu coração
+Estou chorando, gritando, clamando bem alto,
+Muitas pessoas ao meu redor, mas ninguém pode me ouvir
+
+Tristeza, depressão preenche minha cabeça
+Escuridão, Infinito, Buraco Negro
+Conforme o dia se arrasta,
+Eu afundo cada vez mais fundo dentro de mim mesmo
+
+Velho Vento Uivante
+Vento que Sopra,
+Mostre-me seu poder
+e leve embora essas nuvens escuras
+
+Eu não sei por que todas essas nuvens escuras
+pairam no céu...
+
+Velho Vento Uivante sopre sobre meu rosto
+A enxaqueca desaparece
+Agora eu posso ver a luz novamente`
+          }
         }
       ];
 
@@ -90,7 +368,6 @@
         }
       });
 
-      // Carregar dados da planilha e somar aos valores base
       useEffect(() => {
         if (SHEETDB_URL) {
           fetch(`${SHEETDB_URL}?sheet=Comments`)
@@ -186,7 +463,6 @@
         }
       };
 
-      // Clique no Download: Incrementa instantaneamente na tela e grava na planilha
       const handleTrackDownloadClick = async (trackId) => {
         if (!isRegistered) {
           if (vipSectionRef.current) {
@@ -195,7 +471,6 @@
           return;
         }
 
-        // Incremento imediato na interface do usuário
         setDownloadCounts(prev => ({
           ...prev,
           [trackId]: (prev[trackId] || 0) + 1
@@ -259,8 +534,16 @@
         setTimeout(() => setCopiedPix(false), 3000);
       };
 
+      const copyLyricsToClipboard = () => {
+        if (!selectedLyricsTrack) return;
+        const textToCopy = selectedLyricsTrack.lyrics[lyricsLang];
+        navigator.clipboard.writeText(textToCopy);
+        setCopiedLyrics(true);
+        setTimeout(() => setCopiedLyrics(false), 2500);
+      };
+
       return (
-        <div className="min-h-screen">
+        <div className="min-h-screen relative">
           
           <audio 
             ref={audioRef} 
@@ -269,7 +552,7 @@
           ></audio>
 
           {/* Sticky Header */}
-          <header className="sticky top-0 z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
+          <header className="sticky top-0 z-40 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <i data-lucide="disc" className="w-6 h-6 text-red-600 animate-spin"></i>
               <span className="font-extrabold tracking-wider text-lg uppercase bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
@@ -333,7 +616,7 @@
             <div className="text-center space-y-2">
               <h1 className="text-3xl font-black uppercase tracking-tight">Novos Lançamentos</h1>
               <p className="text-xs text-neutral-400 max-w-md mx-auto">
-                Ouça a prévia exclusiva de cada faixa abaixo e faça o download completo em alta qualidade.
+                Ouça a prévia exclusiva de cada faixa abaixo, acompanhe a letra e faça o download completo em alta qualidade.
               </p>
             </div>
 
@@ -345,7 +628,7 @@
                 return (
                   <div key={track.id} className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl group hover:border-red-900/50 transition">
                     <div>
-                      {/* Cover & Download Count Exibindo Números Fortes */}
+                      {/* Cover & Download Count */}
                       <div className="relative aspect-square overflow-hidden bg-neutral-950">
                         <img 
                           src={track.cover} 
@@ -360,9 +643,21 @@
                       </div>
 
                       <div className="p-4 space-y-3">
-                        <div>
-                          <span className="text-[10px] uppercase font-bold text-red-500 tracking-wider">{track.subtitle}</span>
-                          <h3 className="font-bold text-base text-white line-clamp-1">{track.title}</h3>
+                        <div className="flex justify-between items-start gap-2">
+                          <div>
+                            <span className="text-[10px] uppercase font-bold text-red-500 tracking-wider">{track.subtitle}</span>
+                            <h3 className="font-bold text-base text-white line-clamp-1">{track.title}</h3>
+                          </div>
+                          
+                          {/* Botão para Abrir Letra */}
+                          <button 
+                            onClick={() => { setSelectedLyricsTrack(track); setLyricsLang('en'); }}
+                            title="Ver Letra e Tradução"
+                            className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 p-2 rounded-xl transition flex items-center gap-1.5 border border-neutral-700/60 flex-shrink-0"
+                          >
+                            <i data-lucide="file-text" className="w-4 h-4 text-red-500"></i>
+                            <span className="text-[10px] font-bold">Letra</span>
+                          </button>
                         </div>
 
                         <div className="bg-neutral-950/80 border border-neutral-800/80 rounded-xl p-3 space-y-2">
@@ -610,6 +905,86 @@
 
             <p className="text-xs text-neutral-500">© 2026 Marco Brandfer. All rights reserved.</p>
           </footer>
+
+          {/* MODAL DE LETRAS & TRADUÇÃO */}
+          {selectedLyricsTrack && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+              <div className="bg-neutral-900 border border-neutral-800 w-full max-w-xl rounded-2xl overflow-hidden flex flex-col max-h-[85vh] shadow-2xl animate-in fade-in zoom-in duration-200">
+                
+                {/* Modal Header */}
+                <div className="p-4 bg-neutral-950 border-b border-neutral-800 flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={selectedLyricsTrack.cover} 
+                      alt={selectedLyricsTrack.title} 
+                      className="w-10 h-10 rounded-lg object-cover border border-neutral-800"
+                    />
+                    <div>
+                      <h3 className="font-bold text-sm text-white">{selectedLyricsTrack.title}</h3>
+                      <p className="text-[10px] text-neutral-400 uppercase font-mono tracking-wider">{selectedLyricsTrack.subtitle}</p>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => setSelectedLyricsTrack(null)}
+                    className="text-neutral-400 hover:text-white p-1 rounded-lg bg-neutral-900 border border-neutral-800 transition"
+                  >
+                    <i data-lucide="x" className="w-5 h-5"></i>
+                  </button>
+                </div>
+
+                {/* Subheader: Abas de Idioma e Botão Copiar */}
+                <div className="px-4 py-3 bg-neutral-900 border-b border-neutral-800 flex justify-between items-center gap-2">
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setLyricsLang('en')}
+                      className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition ${
+                        lyricsLang === 'en' 
+                          ? 'bg-red-600 text-white border-red-500' 
+                          : 'bg-neutral-950 text-neutral-400 border-neutral-800 hover:text-white'
+                      }`}
+                    >
+                      🇬🇧 Original (EN)
+                    </button>
+                    <button 
+                      onClick={() => setLyricsLang('pt')}
+                      className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition ${
+                        lyricsLang === 'pt' 
+                          ? 'bg-red-600 text-white border-red-500' 
+                          : 'bg-neutral-950 text-neutral-400 border-neutral-800 hover:text-white'
+                      }`}
+                    >
+                      🇧🇷 Tradução (PT-BR)
+                    </button>
+                  </div>
+
+                  <button 
+                    onClick={copyLyricsToClipboard}
+                    className="text-xs text-neutral-300 hover:text-white bg-neutral-950 border border-neutral-800 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition"
+                  >
+                    <i data-lucide={copiedLyrics ? "check" : "copy"} className="w-3.5 h-3.5 text-red-500"></i>
+                    <span>{copiedLyrics ? 'Copiado!' : 'Copiar'}</span>
+                  </button>
+                </div>
+
+                {/* Modal Body: Conteúdo da Letra */}
+                <div className="p-6 overflow-y-auto font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-line bg-neutral-950/50">
+                  {selectedLyricsTrack.lyrics[lyricsLang]}
+                </div>
+
+                {/* Modal Footer */}
+                <div className="p-4 bg-neutral-950 border-t border-neutral-800 text-center">
+                  <button 
+                    onClick={() => setSelectedLyricsTrack(null)}
+                    className="w-full bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold py-2.5 rounded-xl transition"
+                  >
+                    Fechar
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          )}
 
         </div>
       );
