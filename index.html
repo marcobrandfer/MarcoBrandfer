@@ -65,7 +65,9 @@
           audioPreview: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
           downloadZip: './downloads/Marco Brandfer - The Guardian of Hidden Wisdom.zip',
           lyrics: {
-            en: `“Who´s the watchmen ?”
+            en: `The Guardian of Hidden Wisdom
+
+Who´s the watchmen ?”
 
 Through ancient halls, forgotten and cold
 Lies a secret no one has ever told
@@ -82,7 +84,7 @@ In silence he waits, The truth of the ages
 beyond the kingdom…
 The Guardian of Hidden Wisdom
 
-“He is the watchmen ?”
+“He is the watchmen !”
 
 The scrolls of old, in his hands they remain
 Holding the answers to break every chain
@@ -105,6 +107,7 @@ But the price is steep, for the truth you crave
 For wisdom may grant or lead to the grave`,
             pt: `"O Guardião da Sabedoria Oculta"
 
+"Quem é o Guardião?"
 Por corredores antigos, esquecidos e frios
 Reside um segredo que ninguém abriu
 Um guardião vigia além do luar
@@ -118,6 +121,8 @@ A chave dos mistérios, eternamente selado
 
 Em silêncio ele espera, além da força absoluta
 O Guardião da Sabedoria Oculta
+
+"Ele é o Guardião !"
 
 Pergaminhos antigos, em suas mãos estão
 Contendo respostas para toda prisão
@@ -133,10 +138,10 @@ A chave dos mistérios, eternamente selado
 Em silêncio ele espera, além da força absoluta
 O Guardião da Sabedoria Oculta
 
-Somente os dignos podem atravessar
-Para ver a luz que sempre a brilhar
-Mas o preço é alto, pelo saber que se anseia
-Pois a sabedoria pode libertar ou levar à cadeia
+Apenas os dignos podem cruzar a linha
+Para vislumbrar a luz que eternamente brilha
+Mas o preço é alto pela verdade que você almeja
+Pois a sabedoria pode conceder a vida ou levar à sepultura
 
 O guardião vigia, o saber guardado
 A chave dos mistérios, eternamente selado
@@ -153,7 +158,9 @@ O Guardião da Sabedoria Oculta`
           audioPreview: './audios/Marco Brandfer - Raining Tears.mp3',
           downloadZip: './downloads/Marco Brandfer - Raining Tears.zip',
           lyrics: {
-            en: `Broken lands beneath the fire
+            en: `Raining Tears
+
+Broken lands beneath the fire
 Children starving in the cold
 The laughter of Kings from their towers
 Trading blood instead of gold
@@ -215,7 +222,9 @@ It's raining tears, oh God!
 Hear the anthem of the free
 From the ruins of oppression
 We will rise eternally`,
-            pt: `Terras devastadas sob o fogo
+            pt: ` Chovendo Lágrimas
+
+Terras devastadas sob o fogo
 Crianças famintas no frio
 O riso dos Reis de suas torres
 Trocando sangue ao invés de ouro
@@ -287,7 +296,9 @@ Nós nos ergueremos eternamente`
           audioPreview: './audios/Marco Brandfer - Dark Clouds.mp3',
           downloadZip: './downloads/Marco Brandfer - Dark Clouds.zip',
           lyrics: {
-            en: `Where are my friends?
+            en: `Dark Clouds
+
+Where are my friends?
 Where is my family
 I´m drained to the bone
 My energy is gone..
@@ -320,7 +331,9 @@ hang in the sky…
 Old Howling Wind blow upon my face
 The Migraine fades away
 Now I can see the light again`,
-            pt: `Onde estão meus amigos?
+            pt: `Núvens Negras
+
+Onde estão meus amigos?
 Onde está minha família?
 Estou esgotado até os ossos
 Minha energia se foi...
@@ -603,7 +616,16 @@ Agora eu posso ver a luz novamente`
                     onClick={() => togglePlayTrack(introAudio.id, introAudio.audioPreview)}
                     className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 rounded-2xl transition flex items-center justify-center gap-3 shadow-lg shadow-red-950/50 group"
                   >
-                    <i data-lucide={currentPlayingId === introAudio.id ? "pause" : "play"} className="w-5 h-5 fill-white group-hover:scale-110 transition"></i>
+                    {currentPlayingId === introAudio.id ? (
+                      <svg className="w-5 h-5 fill-white group-hover:scale-110 transition" viewBox="0 0 24 24">
+                        <rect x="6" y="4" width="4" height="16" rx="1" />
+                        <rect x="14" y="4" width="4" height="16" rx="1" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5 fill-white group-hover:scale-110 transition" viewBox="0 0 24 24">
+                        <polygon points="5,3 19,12 5,21" />
+                      </svg>
+                    )}
                     <span>{currentPlayingId === introAudio.id ? "Pausar" : "Clique e Ouça (35s)"}</span>
                   </button>
                 </div>
@@ -664,9 +686,19 @@ Agora eu posso ver a luz novamente`
                           <div className="flex items-center gap-3">
                             <button 
                               onClick={() => togglePlayTrack(track.id, track.audioPreview)}
+                              aria-label={isThisPlaying ? "Pausar" : "Tocar"}
                               className="bg-red-600 hover:bg-red-700 text-white p-2.5 rounded-full transition flex-shrink-0 flex items-center justify-center shadow-md shadow-red-950"
                             >
-                              <i data-lucide={isThisPlaying ? "pause" : "play"} className="w-4 h-4 fill-white"></i>
+                              {isThisPlaying ? (
+                                <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                                </svg>
+                              ) : (
+                                <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                                  <polygon points="5,3 19,12 5,21" />
+                                </svg>
+                              )}
                             </button>
                             
                             <div className="flex-1 space-y-1">
