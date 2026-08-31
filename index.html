@@ -304,15 +304,15 @@
 
               <div className="w-full md:w-1/2 p-6 md:p-10 space-y-4">
                 <span className="text-xs uppercase tracking-widest font-bold text-red-500 flex items-center gap-2">
-                  <i data-lucide="volume-2" className="w-4 h-4"></i> Mensagem Especial para os Fãs
+                  <i data-lucide="volume-2" className="w-4 h-4"></i> Qual a Chave da Sabedoria Oculta?
                 </span>
                 
                 <h2 className="text-2xl md:text-3xl font-black uppercase leading-tight text-white">
-                  Bem-vindo ao Universo do Heavy Metal
+                  "Só os dignos podem cruzer a linha..."
                 </h2>
                 
                 <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
-                  Ouça a mensagem de introdução de 35s sobre <strong className="text-neutral-200">The Guardian of Hidden Wisdom</strong> e descubra a história por trás deste lançamento.
+                  Ouça Agora <strong className="text-neutral-200">The Guardian of Hidden Wisdom</strong> e descubra a história por trás deste lançamento.
                 </p>
 
                 <div className="pt-2">
@@ -321,7 +321,7 @@
                     className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 rounded-2xl transition flex items-center justify-center gap-3 shadow-lg shadow-red-950/50 group"
                   >
                     <i data-lucide={currentPlayingId === introAudio.id ? "pause" : "play"} className="w-5 h-5 fill-white group-hover:scale-110 transition"></i>
-                    <span>{currentPlayingId === introAudio.id ? "Pausar Mensagem" : "Ouvir Chamada (35s)"}</span>
+                    <span>{currentPlayingId === introAudio.id ? "Pausar" : "Clique e Ouça (35s)"}</span>
                   </button>
                 </div>
               </div>
@@ -534,7 +534,7 @@
                 <i data-lucide="message-square" className="text-red-500 w-6 h-6"></i>
                 <div>
                   <h2 className="text-xl font-bold">Mural dos Fãs & Comunidade</h2>
-                  <p className="text-xs text-neutral-400">O que achou das novas músicas? Deixe seu comentário abaixo!</p>
+                  <p className="text-xs text-neutral-400">E aí, já ouviu?? Qual a sua Faixa Favorita?? Ouça e Deixe seu comentário abaixo!</p>
                 </div>
               </div>
 
@@ -542,7 +542,7 @@
                 <input 
                   type="text" 
                   required
-                  placeholder="Seu Nome ou Nick (ex: MetalVocalist)"
+                  placeholder="Seu Nome ou Nick"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
@@ -550,7 +550,7 @@
                 <textarea 
                   required
                   rows="3"
-                  placeholder="Conte o que você achou das faixas..."
+                  placeholder="Sua opinião é de valor imensurável! Ouça Agora todas as Faixas e diga qual a sua Favorita..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
