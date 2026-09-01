@@ -27,7 +27,7 @@
         return localStorage.getItem('mb_vip_registered') === 'true';
       });
       const [vipName, setVipName] = useState('');
-      const [vipLocation, setVipLocation] = useState(''); // Cidade / País livre
+      const [vipLocation, setVipLocation] = useState('');
       const [vipEmail, setVipEmail] = useState('');
       const [vipInstagram, setVipInstagram] = useState('');
 
@@ -45,7 +45,7 @@
 
       const [activeRiddle, setActiveRiddle] = useState(null);
       const [selectedOptionRiddle1, setSelectedOptionRiddle1] = useState('');
-      const [selectedOptionRiddle2, setSelectedOptionRiddle2] = useState(''); // Agora por alternativas
+      const [selectedOptionRiddle2, setSelectedOptionRiddle2] = useState('');
       const [riddleError, setRiddleError] = useState('');
       const [riddleSuccessText, setRiddleSuccessText] = useState('');
 
@@ -83,7 +83,7 @@
           subtitle: 'Single Oficial #1',
           cover: './images/capaguardian.jpg',
           audioPreview: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
-          downloadZip: './downloads/Marco Brandfer - The Guardian of Hidden Wisdom.zip',
+          downloadFile: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
           lyrics: {
             en: `The Guardian of Hidden Wisdom
 
@@ -130,11 +130,11 @@ For wisdom may grant or lead to the grave`,
 "Quem é o Guardião?"
 Por corredores antigos, esquecidos e frios
 Reside um segredo que ninguém abriu
-Um guardião vigia além do luar
-Protegendo a sabedoria, difícil de achar
+Um guardião vigia além da noite
+Protegendo a sabedoria, oculta da visão
 
-Nas sombras profundas, onde o tempo jaz
-Um poder desperta, se alguém capaz
+Nas sombras profundas, onde o tempo dorme
+Um poder desperta, para aqueles que procuram
 
 O guardião vigia, o saber guardado
 A chave dos mistérios, eternamente selado
@@ -149,8 +149,8 @@ Contendo respostas para toda prisão
 Ele observa o mundo em eterno conflito
 Sabendo que a verdade mudaria o escrito
 
-Nas sombras profundas, onde o tempo jaz
-Um poder desperta, se alguém capaz
+Nas sombras profundas, onde o tempo dorme
+Um poder desperta, para aqueles que procuram
 
 O guardião vigia, o saber guardado
 A chave dos mistérios, eternamente selado
@@ -170,7 +170,7 @@ Pois a sabedoria pode conceder a vida ou levar à sepultura`
           subtitle: 'Single Oficial #2',
           cover: './images/caparaining.jpg',
           audioPreview: './audios/Marco Brandfer - Raining Tears.mp3',
-          downloadZip: './downloads/Marco Brandfer - Raining Tears.zip',
+          downloadFile: './audios/Marco Brandfer - Raining Tears.mp3',
           lyrics: {
             en: `Raining Tears
 
@@ -309,7 +309,7 @@ Nós nos ergueremos eternamente`
           subtitle: 'Single Oficial #3',
           cover: './images/capadarkclouds.jpg',
           audioPreview: './audios/Marco Brandfer - Dark Clouds.mp3',
-          downloadZip: './downloads/Marco Brandfer - Dark Clouds.zip',
+          downloadFile: './audios/Marco Brandfer - Dark Clouds.mp3',
           lyrics: {
             en: `Dark Clouds
 
@@ -467,7 +467,6 @@ Agora eu posso ver a luz novamente`
         return `${m}:${s < 10 ? '0' : ''}${s}`;
       };
 
-      // Cadastro VIP (Nome, Cidade/País, Email, Instagram)
       const handleVipRegister = async (e) => {
         e.preventDefault();
         if (!vipEmail || !vipName) return;
@@ -477,7 +476,7 @@ Agora eu posso ver a luz novamente`
 
         const payload = {
           name: vipName,
-          country: vipLocation || 'Não informado', // Campo Cidade / País livre
+          country: vipLocation || 'Não informado',
           email: vipEmail,
           instagram: vipInstagram || 'Não informado',
           date: today
@@ -582,7 +581,6 @@ Agora eu posso ver a luz novamente`
         setTimeout(() => setCopiedLyrics(false), 2500);
       };
 
-      // Resolução Enigma #1
       const handleSolveRiddle1 = (e) => {
         e.preventDefault();
         if (selectedOptionRiddle1 === 'B') {
@@ -594,7 +592,6 @@ Agora eu posso ver a luz novamente`
         }
       };
 
-      // Resolução Enigma #2 (Agora em alternativas de escolha)
       const handleSolveRiddle2 = (e) => {
         e.preventDefault();
         if (selectedOptionRiddle2 === 'C') {
@@ -812,8 +809,8 @@ Agora eu posso ver a luz novamente`
                     <div className="p-4 pt-0 space-y-2">
                       {isUnlocked ? (
                         <a 
-                          href={isRegistered ? track.downloadZip : "#vip"}
-                          download={isRegistered ? `${track.title}.zip` : undefined}
+                          href={isRegistered ? track.downloadFile : "#vip"}
+                          download={isRegistered ? `${track.title}.mp3` : undefined}
                           onClick={() => handleTrackDownloadClick(track.id)}
                           className={`w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition ${
                             isRegistered 
@@ -822,7 +819,7 @@ Agora eu posso ver a luz novamente`
                           }`}
                         >
                           <i data-lucide={isRegistered ? "download" : "lock"} className="w-4 h-4"></i>
-                          <span>{isRegistered ? 'Baixar Faixa (.ZIP)' : 'Desbloquear Download Grátis'}</span>
+                          <span>{isRegistered ? 'Baixar Música (.MP3)' : 'Desbloquear Download Grátis'}</span>
                         </a>
                       ) : (
                         <div className="py-2.5 text-center text-xs text-neutral-600 font-mono italic">
@@ -844,7 +841,7 @@ Agora eu posso ver a luz novamente`
             </div>
           </section>
 
-          {/* VIP Fan Area - FORMULÁRIO COM CIDADE/PAÍS EM TEXTO LIVRE */}
+          {/* VIP Fan Area */}
           <section id="vip" ref={vipSectionRef} className="max-w-3xl mx-auto my-12 px-4">
             <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
               <div className="flex justify-between items-center mb-4">
@@ -931,7 +928,7 @@ Agora eu posso ver a luz novamente`
                     <i data-lucide="user-check" className="w-5 h-5"></i> Acesso VIP Liberado!
                   </div>
                   <p className="text-xs text-neutral-400">
-                    Você já possui acesso VIP ativado. Escolha qualquer uma das músicas desbloqueadas nos cards acima para realizar o download direto do arquivo .ZIP.
+                    Você já possui acesso VIP ativado. Escolha qualquer uma das músicas desbloqueadas nos cards acima para realizar o download direto do arquivo MP3.
                   </p>
                 </div>
               )}
@@ -1228,7 +1225,7 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
-          {/* MODAL ENIGMA #2 (MÚLTIPLA ESCHOICE) */}
+          {/* MODAL ENIGMA #2 */}
           {activeRiddle === 'riddle2' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
