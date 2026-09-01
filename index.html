@@ -56,6 +56,7 @@
       });
 
       const [copiedPix, setCopiedPix] = useState(false);
+      const [copiedShare, setCopiedShare] = useState(false);
       const [isSubmittingVip, setIsSubmittingVip] = useState(false);
       const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
@@ -573,6 +574,22 @@ Agora eu posso ver a luz novamente`
         setTimeout(() => setCopiedPix(false), 3000);
       };
 
+      const handleShareApp = () => {
+        const shareData = {
+          title: 'Marco Brandfer - Official Web App',
+          text: 'Ouça os singles de Heavy Metal independente, decifre os enigmas e baixe as músicas de Marco Brandfer!',
+          url: window.location.href
+        };
+
+        if (navigator.share) {
+          navigator.share(shareData).catch((err) => console.log('Erro ao compartilhar:', err));
+        } else {
+          navigator.clipboard.writeText(window.location.href);
+          setCopiedShare(true);
+          setTimeout(() => setCopiedShare(false), 3000);
+        }
+      };
+
       const copyLyricsToClipboard = () => {
         if (!selectedLyricsTrack) return;
         const textToCopy = selectedLyricsTrack.lyrics[lyricsLang];
@@ -630,13 +647,22 @@ Agora eu posso ver a luz novamente`
             </div>
             
             <div className="flex items-center gap-3">
+              <button 
+                onClick={handleShareApp} 
+                className="text-neutral-300 hover:text-white bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/60 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5"
+                title="Compartilhar Web App"
+              >
+                <i data-lucide={copiedShare ? "check" : "share-2"} className="w-3.5 h-3.5 text-red-500"></i>
+                <span className="hidden sm:inline">{copiedShare ? 'Link Copiado!' : 'Compartilhar'}</span>
+              </button>
+
               <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition">
                 <i data-lucide="instagram" className="w-5 h-5"></i>
               </a>
               <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-red-500 transition">
                 <i data-lucide="youtube" className="w-5 h-5"></i>
               </a>
-              <a href="#support" className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-bold transition ml-2">
+              <a href="#support" className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-bold transition ml-1">
                 Apoiar
               </a>
             </div>
