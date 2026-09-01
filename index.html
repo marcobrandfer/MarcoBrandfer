@@ -1013,6 +1013,20 @@ Agora eu posso ver a luz novamente`
                 </div>
               </div>
             </div>
+
+            {/* Bloco de Compartilhamento Direto */}
+            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 text-center space-y-4">
+              <p className="text-xs md:text-sm font-semibold text-neutral-300">
+                Compartilhe essa Novidade com seus Amigos que Apreciam o Bom Heavy Metal
+              </p>
+              <button 
+                onClick={handleShareApp} 
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 mx-auto shadow-lg shadow-red-950"
+              >
+                <i data-lucide={copiedShare ? "check" : "share-2"} className="w-4 h-4"></i>
+                <span>{copiedShare ? 'Link Copiado!' : 'Compartilhar App'}</span>
+              </button>
+            </div>
           </section>
 
           {/* Mural dos Fãs */}
