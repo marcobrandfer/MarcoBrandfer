@@ -17,6 +17,105 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
+    // Componente da Loja de Camisetas (WhatsApp Integration)
+    function CamisetaSection() {
+      const [tamanho, setTamanho] = useState("G");
+      const [quantidade, setQuantidade] = useState(1);
+      const numeroWhatsApp = "5543988043776";
+
+      const handleComprarZap = () => {
+        const qtd = quantidade || 1;
+        const mensagem = `Olá Equipe Marco Brandfer, eu gostaria de adquirir (${qtd}) camiseta tamanho (${tamanho})`;
+        const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, '_blank');
+      };
+
+      const tamanhos = ['P', 'M', 'G', 'GG', 'XGG'];
+
+      return (
+        <section className="max-w-5xl mx-auto my-12 px-4">
+          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
+            
+            {/* Imagem do Produto */}
+            <div className="w-full md:w-1/2 text-center">
+              <img 
+                src="images/camisetaguardian.jpg" 
+                alt="Camiseta The Guardian of Hidden Wisdom" 
+                className="w-full max-w-md mx-auto rounded-xl shadow-lg border border-neutral-800"
+              />
+            </div>
+
+            {/* Detalhes e Controles */}
+            <div className="w-full md:w-1/2 space-y-5">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">Merchandise Oficial</span>
+                <h2 className="text-2xl md:text-3xl font-black text-amber-400 tracking-wide mt-1">
+                  CAMISETA THE GUARDIAN OF HIDDEN WISDOM
+                </h2>
+              </div>
+
+              <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
+                Camiseta oficial em malha 100% algodão de alta qualidade, estampa exclusiva com acabamento premium. Leve a energia e o peso do metal com você.
+              </p>
+
+              <div className="text-2xl font-bold text-white">
+                R$ 89,90 <span className="text-xs text-neutral-500 font-normal">(via PIX ou Cartão)</span>
+              </div>
+
+              {/* Tamanhos */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-amber-500 mb-2">Escolha o Tamanho:</label>
+                <div className="flex gap-2 flex-wrap">
+                  {tamanhos.map((tam) => (
+                    <button
+                      key={tam}
+                      type="button"
+                      onClick={() => setTamanho(tam)}
+                      className={`px-4 py-2 rounded-lg font-bold text-xs transition border ${
+                        tamanho === tam 
+                          ? 'bg-amber-500 text-black border-amber-500 font-extrabold' 
+                          : 'bg-neutral-950 text-white border-neutral-800 hover:border-neutral-600'
+                      }`}
+                    >
+                      {tam}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quantidade */}
+              <div>
+                <label htmlFor="qtdCamiseta" className="block text-xs font-bold uppercase text-amber-500 mb-2">Quantidade:</label>
+                <input 
+                  type="number" 
+                  id="qtdCamiseta" 
+                  value={quantidade} 
+                  min="1" 
+                  max="10"
+                  onChange={(e) => setQuantidade(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-20 bg-neutral-950 border border-neutral-800 text-white font-bold text-center py-2 rounded-lg text-sm focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              {/* Botão WhatsApp */}
+              <button 
+                onClick={handleComprarZap}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950"
+              >
+                <i data-lucide="message-circle" className="w-5 h-5"></i>
+                <span>Pedir pelo WhatsApp</span>
+              </button>
+
+              <p className="text-[11px] text-neutral-500 text-center">
+                🔒 Atendimento direto e seguro • Pagamento via PIX ou Cartão
+              </p>
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
     function MarcoBrandferApp() {
       const [currentPlayingId, setCurrentPlayingId] = useState(null);
       const [currentTime, setCurrentTime] = useState(0);
@@ -1093,6 +1192,9 @@ Agora eu posso ver a luz novamente`
               </div>
             </div>
           </section>
+
+          {/* SEÇÃO OFICIAL DE CAMISETAS (ÚLTIMA COISA DO APP) */}
+          <CamisetaSection />
 
           {/* Footer */}
           <footer className="max-w-4xl mx-auto mt-16 px-4 pt-8 border-t border-neutral-800 text-center space-y-6">
