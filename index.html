@@ -22,8 +22,15 @@
       const [currentTime, setCurrentTime] = useState(0);
       const [duration, setDuration] = useState(0);
       
-      const [isRegistered, setIsRegistered] = useState(false);
-      const [email, setEmail] = useState('');
+      // Estado de Registro VIP
+      const [isRegistered, setIsRegistered] = useState(() => {
+        return localStorage.getItem('mb_vip_registered') === 'true';
+      });
+      const [vipName, setVipName] = useState('');
+      const [vipLocation, setVipLocation] = useState(''); // Cidade / País livre
+      const [vipEmail, setVipEmail] = useState('');
+      const [vipInstagram, setVipInstagram] = useState('');
+
       const [comments, setComments] = useState([]);
       const [newComment, setNewComment] = useState('');
       const [userName, setUserName] = useState('');
@@ -38,7 +45,7 @@
 
       const [activeRiddle, setActiveRiddle] = useState(null);
       const [selectedOptionRiddle1, setSelectedOptionRiddle1] = useState('');
-      const [inputRiddle2, setInputRiddle2] = useState('');
+      const [selectedOptionRiddle2, setSelectedOptionRiddle2] = useState(''); // Agora por alternativas
       const [riddleError, setRiddleError] = useState('');
       const [riddleSuccessText, setRiddleSuccessText] = useState('');
 
@@ -49,7 +56,7 @@
       });
 
       const [copiedPix, setCopiedPix] = useState(false);
-      const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
+      const [isSubmittingVip, setIsSubmittingVip] = useState(false);
       const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
       // Modal de Letras
@@ -460,28 +467,39 @@ Agora eu posso ver a luz novamente`
         return `${m}:${s < 10 ? '0' : ''}${s}`;
       };
 
-      const handleRegister = async (e) => {
+      // Cadastro VIP (Nome, Cidade/País, Email, Instagram)
+      const handleVipRegister = async (e) => {
         e.preventDefault();
-        if (!email) return;
+        if (!vipEmail || !vipName) return;
 
-        setIsSubmittingEmail(true);
+        setIsSubmittingVip(true);
         const today = new Date().toLocaleDateString('pt-BR');
+
+        const payload = {
+          name: vipName,
+          country: vipLocation || 'Não informado', // Campo Cidade / País livre
+          email: vipEmail,
+          instagram: vipInstagram || 'Não informado',
+          date: today
+        };
 
         try {
           if (SHEETDB_URL) {
             await fetch(`${SHEETDB_URL}?sheet=Vip_Fans`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ data: [{ email: email, date: today }] })
+              body: JSON.stringify({ data: [payload] })
             });
           }
+          localStorage.setItem('mb_vip_registered', 'true');
           setIsRegistered(true);
           setActiveFansCount(prev => prev + 1);
         } catch (err) {
-          console.error("Erro ao salvar email:", err);
+          console.error("Erro ao salvar cadastro VIP:", err);
+          localStorage.setItem('mb_vip_registered', 'true');
           setIsRegistered(true);
         } finally {
-          setIsSubmittingEmail(false);
+          setIsSubmittingVip(false);
         }
       };
 
@@ -576,16 +594,15 @@ Agora eu posso ver a luz novamente`
         }
       };
 
-      // Resolução Enigma #2
+      // Resolução Enigma #2 (Agora em alternativas de escolha)
       const handleSolveRiddle2 = (e) => {
         e.preventDefault();
-        const cleanInput = inputRiddle2.trim().toLowerCase();
-        if (cleanInput === 'eu' || cleanInput === 'o próprio fã' || cleanInput === 'o proprio fa' || cleanInput === 'o fã') {
+        if (selectedOptionRiddle2 === 'C') {
           setRiddleError('');
-          setRiddleSuccessText("Sua visão alcançou além das sombras. Você é a chama que dissipa as Nuvens Negras. A faixa 'Dark Clouds' foi totalmente desbloqueada!");
+          setRiddleSuccessText("Sua visão alcançou além das sombras. Você é a chama e a consciência que dissipa as Nuvens Negras. A faixa 'Dark Clouds' foi totalmente desbloqueada!");
           setUnlockedTracks(prev => ({ ...prev, dark_clouds: true }));
         } else {
-          setRiddleError("Incorreto! Lembre-se do texto do último portal... Quem é a verdadeira consciência?");
+          setRiddleError("Incorreto! Pense bem: quem é que escuta a música e desperta a sabedoria dentro de si?");
         }
       };
 
@@ -594,7 +611,7 @@ Agora eu posso ver a luz novamente`
         setRiddleError('');
         setRiddleSuccessText('');
         setSelectedOptionRiddle1('');
-        setInputRiddle2('');
+        setSelectedOptionRiddle2('');
       };
 
       return (
@@ -632,7 +649,6 @@ Agora eu posso ver a luz novamente`
           <section className="max-w-5xl mx-auto mt-6 px-4">
             <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row items-center">
               
-              {/* Foto ajustada sem corte no mobile */}
               <div className="w-full md:w-1/2 p-2 sm:p-4 bg-neutral-950 flex items-center justify-center">
                 <img 
                   src="./images/hero-banner.jpg" 
@@ -676,7 +692,7 @@ Agora eu posso ver a luz novamente`
             </div>
           </section>
 
-          {/* Decifre os Enigmas Ocultos com Gamificação */}
+          {/* Decifre os Enigmas Ocultos */}
           <section className="max-w-5xl mx-auto my-12 px-4 space-y-6">
             <div className="text-center space-y-2">
               <h1 className="text-3xl font-black uppercase tracking-tight">Decifre os Enigmas Ocultos</h1>
@@ -708,7 +724,6 @@ Agora eu posso ver a luz novamente`
                     )}
 
                     <div>
-                      {/* Cover & Download Count */}
                       <div className="relative aspect-square overflow-hidden bg-neutral-950">
                         <img 
                           src={track.cover} 
@@ -729,7 +744,6 @@ Agora eu posso ver a luz novamente`
                             <h3 className="font-bold text-base text-white line-clamp-1">{track.title}</h3>
                           </div>
                           
-                          {/* Botão de Letra */}
                           <button 
                             onClick={() => { setSelectedLyricsTrack(track); setLyricsLang('en'); }}
                             title="Ver Letra e Tradução"
@@ -740,7 +754,6 @@ Agora eu posso ver a luz novamente`
                           </button>
                         </div>
 
-                        {/* Player / Bloqueio por Enigma */}
                         {isUnlocked ? (
                           <div className="bg-neutral-950/80 border border-neutral-800/80 rounded-xl p-3 space-y-2">
                             <div className="flex items-center gap-3">
@@ -831,7 +844,7 @@ Agora eu posso ver a luz novamente`
             </div>
           </section>
 
-          {/* VIP Fan Area */}
+          {/* VIP Fan Area - FORMULÁRIO COM CIDADE/PAÍS EM TEXTO LIVRE */}
           <section id="vip" ref={vipSectionRef} className="max-w-3xl mx-auto my-12 px-4">
             <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
               <div className="flex justify-between items-center mb-4">
@@ -847,33 +860,78 @@ Agora eu posso ver a luz novamente`
               {!isRegistered ? (
                 <div className="space-y-4">
                   <p className="text-neutral-400 text-sm">
-                    Digite seu e-mail para Desbloquear Downloads de todos os singles em alta qualidade.
+                    Preencha os dados abaixo para Desbloquear Downloads de todos os singles em alta qualidade.
                   </p>
-                  <form onSubmit={handleRegister} className="flex flex-col sm:flex-row gap-3 pt-2">
-                    <input 
-                      type="email" 
-                      required
-                      placeholder="Digite seu melhor e-mail" 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-neutral-950 border border-neutral-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-red-600 flex-1 text-sm"
-                    />
+                  
+                  <form onSubmit={handleVipRegister} className="space-y-3 pt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Seu Nome *</label>
+                        <input 
+                          type="text" 
+                          required
+                          placeholder="Digite seu nome completo" 
+                          value={vipName}
+                          onChange={(e) => setVipName(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Cidade / País *</label>
+                        <input 
+                          type="text" 
+                          required
+                          placeholder="Ex: São Paulo / Brasil" 
+                          value={vipLocation}
+                          onChange={(e) => setVipLocation(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">E-mail *</label>
+                        <input 
+                          type="email" 
+                          required
+                          placeholder="Digite seu melhor e-mail" 
+                          value={vipEmail}
+                          onChange={(e) => setVipEmail(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Instagram (@usuario)</label>
+                        <input 
+                          type="text" 
+                          placeholder="@seuinstagram" 
+                          value={vipInstagram}
+                          onChange={(e) => setVipInstagram(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+                    </div>
+
                     <button 
                       type="submit" 
-                      disabled={isSubmittingEmail}
-                      className="bg-red-600 hover:bg-red-700 font-bold px-6 py-3 rounded-xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                      disabled={isSubmittingVip}
+                      className="w-full bg-red-600 hover:bg-red-700 font-bold px-6 py-3.5 rounded-xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-50 mt-2 shadow-lg shadow-red-950"
                     >
-                      <span>{isSubmittingEmail ? 'Liberando...' : 'Desbloquear Downloads'}</span>
+                      <i data-lucide="unlock" className="w-4 h-4"></i>
+                      <span>{isSubmittingVip ? 'Liberando Acesso VIP...' : 'Digitar e-mail para Desbloquear Downloads'}</span>
                     </button>
                   </form>
                 </div>
               ) : (
-                <div className="bg-neutral-950/80 border border-green-500/30 p-4 rounded-xl space-y-2">
+                <div className="bg-neutral-950/80 border border-green-500/30 p-5 rounded-xl space-y-2">
                   <div className="flex items-center gap-2 text-green-400 font-bold text-sm">
                     <i data-lucide="user-check" className="w-5 h-5"></i> Acesso VIP Liberado!
                   </div>
                   <p className="text-xs text-neutral-400">
-                    Você já possui acesso liberado. Escolha qualquer uma das músicas desbloqueadas nos cards acima para realizar o download direto do arquivo .ZIP.
+                    Você já possui acesso VIP ativado. Escolha qualquer uma das músicas desbloqueadas nos cards acima para realizar o download direto do arquivo .ZIP.
                   </p>
                 </div>
               )}
@@ -1023,7 +1081,6 @@ Agora eu posso ver a luz novamente`
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-neutral-800 w-full max-w-xl rounded-2xl overflow-hidden flex flex-col max-h-[85vh] shadow-2xl">
                 
-                {/* Modal Header */}
                 <div className="p-4 bg-neutral-950 border-b border-neutral-800 flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <img 
@@ -1045,7 +1102,6 @@ Agora eu posso ver a luz novamente`
                   </button>
                 </div>
 
-                {/* Subheader: Idiomas e Copiar */}
                 <div className="px-4 py-3 bg-neutral-900 border-b border-neutral-800 flex justify-between items-center gap-2">
                   <div className="flex gap-2">
                     <button 
@@ -1079,12 +1135,10 @@ Agora eu posso ver a luz novamente`
                   </button>
                 </div>
 
-                {/* Body da Letra */}
                 <div className="p-6 overflow-y-auto font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-line bg-neutral-950/50">
                   {selectedLyricsTrack.lyrics[lyricsLang]}
                 </div>
 
-                {/* Modal Footer */}
                 <div className="p-4 bg-neutral-950 border-t border-neutral-800 text-center">
                   <button 
                     onClick={() => setSelectedLyricsTrack(null)}
@@ -1098,7 +1152,7 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
-          {/* MODAL ENIGMA #1 (Faixa 2 - Raining Tears) */}
+          {/* MODAL ENIGMA #1 */}
           {activeRiddle === 'riddle1' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
@@ -1174,7 +1228,7 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
-          {/* MODAL ENIGMA #2 (Faixa 3 - Dark Clouds) */}
+          {/* MODAL ENIGMA #2 (MÚLTIPLA ESCHOICE) */}
           {activeRiddle === 'riddle2' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
@@ -1188,23 +1242,43 @@ Agora eu posso ver a luz novamente`
                 {!riddleSuccessText ? (
                   <form onSubmit={handleSolveRiddle2} className="space-y-4">
                     <p className="text-sm font-semibold text-neutral-200 leading-relaxed">
-                      "Ele é quem vigia além da noite, Protegendo a sabedoria, oculta aos olhos... Quem é o Guardião?"
+                      "Ele é quem vigia além da noite, protegendo a sabedoria oculta... Quem é o verdadeiro Guardião da Sabedoria Oculta?"
                     </p>
 
-                    <input 
-                      type="text" 
-                      required
-                      placeholder="Digite quem é o verdadeiro Guardião..."
-                      value={inputRiddle2}
-                      onChange={(e) => setInputRiddle2(e.target.value)}
-                      className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-red-600 text-xs"
-                    />
+                    <div className="space-y-2">
+                      {[
+                        { id: 'A', text: 'A) Um guerreiro esquecido das lendas' },
+                        { id: 'B', text: 'B) O Rei dos Ventos Antigos' },
+                        { id: 'C', text: 'C) Você mesmo (O ouvinte / A sua consciência)' },
+                        { id: 'D', text: 'D) O próprio vilão das sombras' }
+                      ].map((opt) => (
+                        <label 
+                          key={opt.id} 
+                          className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${
+                            selectedOptionRiddle2 === opt.id 
+                              ? 'bg-red-950/60 border-red-600 text-white font-bold' 
+                              : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
+                          }`}
+                        >
+                          <input 
+                            type="radio" 
+                            name="riddle2" 
+                            value={opt.id}
+                            checked={selectedOptionRiddle2 === opt.id}
+                            onChange={(e) => setSelectedOptionRiddle2(e.target.value)}
+                            className="accent-red-600"
+                          />
+                          <span>{opt.text}</span>
+                        </label>
+                      ))}
+                    </div>
 
                     {riddleError && <p className="text-xs text-red-500 font-bold">{riddleError}</p>}
 
                     <button 
                       type="submit" 
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition"
+                      disabled={!selectedOptionRiddle2}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50"
                     >
                       Revelar Segredo
                     </button>
